@@ -21,7 +21,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.BiFunction;
-import java.util.stream.Collectors;
 
 import static net.kyori.adventure.text.Component.*;
 
@@ -366,10 +365,9 @@ public final class MessageBuilder implements StatTextFormatter {
      * as is.
      */
     public @NotNull FormattingFunction formattedTopStatFunction(@NotNull LinkedHashMap<String, Integer> topStats, @NotNull StatRequest.Settings request) {
-        //TODO add logic to calculate top number correctly
-
-        final TextComponent title = getTopStatTitle(topStats.size(), request.getStatistic(), request.getSubStatEntryName());
-        final TextComponent list = getTopStatListComponent(topStats, request);
+        final int topListSize = Math.min(topStats.size(), config.getTopListMaxSize());
+        final TextComponent title = getTopStatTitle(topListSize, request.getStatistic(), request.getSubStatEntryName());
+        final TextComponent list = getTopStatListComponent(topStats, topListSize, request);
         final boolean useEnters = config.useEnters(Target.TOP, false);
         final boolean useEntersForShared = config.useEnters(Target.TOP, true);
 
@@ -477,15 +475,14 @@ public final class MessageBuilder implements StatTextFormatter {
         }
     }
 
-    private @NotNull TextComponent getTopStatListComponent(@NotNull LinkedHashMap<String, Integer> topStats, StatRequest.Settings request) {
+    private @NotNull TextComponent getTopStatListComponent(@NotNull LinkedHashMap<String, Integer> topStats, int topListSize, StatRequest.Settings request) {
         TextComponent.Builder topList = Component.text();
-        Set<String> playerNames = topStats.keySet()
-                .stream()
-                .limit(request.getTopListSize())
-                .collect(Collectors.toSet());
 
         int count = 0;
-        for (String playerName : playerNames) {
+        for (String playerName : topStats.keySet()) {
+            if (count >= topListSize) {
+                break;
+            }
             topList.append(newline())
                    .append(getTopStatLineComponent(
                            ++count,

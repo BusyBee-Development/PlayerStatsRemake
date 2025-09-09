@@ -16,9 +16,16 @@ public final class DefaultValueGetter {
     }
 
     public Map<String, Object> getValuesToAdjust() {
+        checkRainbowThemeUsage();
         checkTopListDefault();
         checkDefaultColors();
         return defaultValuesToAdjust;
+    }
+
+    private void checkRainbowThemeUsage() {
+        if (config.contains("rainbow-mode") && config.getBoolean("rainbow-mode")) {
+            defaultValuesToAdjust.put("use-theme", "pride");
+        }
     }
 
     private void checkTopListDefault() {

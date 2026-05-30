@@ -41,13 +41,19 @@ public final class Main extends JavaPlugin implements PlayerStatsRemake {
     private static List<Closable> closables;
 
     private static com.fernsehheft.playerstatsremake.core.database.DatabaseManager databaseManager;
+    private static com.fernsehheft.playerstatsremake.core.config.PlayerColorManager playerColorManager;
 
     public static com.fernsehheft.playerstatsremake.core.database.DatabaseManager getDatabaseManager() {
         return databaseManager;
     }
 
+    public static com.fernsehheft.playerstatsremake.core.config.PlayerColorManager getPlayerColorManager() {
+        return playerColorManager;
+    }
+
     @Override
     public void onEnable() {
+        long startTime = System.currentTimeMillis();
         reloadables = new ArrayList<>();
         closables = new ArrayList<>();
 
@@ -73,17 +79,19 @@ public final class Main extends JavaPlugin implements PlayerStatsRemake {
 
         // Pretty startup banner
         String version = this.getPluginMeta().getVersion();
+        String vLine = "   PlayerStats  R E M A K E   v" + version;
+        String paddedVLine = String.format("|%-45s|", vLine);
         getLogger().info("*---------------------------------------------*");
-        getLogger().info("|   PlayerStats  R E M A K E   v" + version + "        |");
-        getLogger().info("|   A fork of PlayerStats by Artemis_the_gr8  |");
-        getLogger().info("|   https://github.com/itHotL/PlayerStats      |");
+        getLogger().info(paddedVLine);
+        getLogger().info("|   A fork of PlayerStats by Artemis_the_gr8    |");
+        getLogger().info("|   https://github.com/itHotL/PlayerStats       |");
         getLogger().info("*---------------------------------------------*");
         getLogger().info("| + Folia support                               |");
-        getLogger().info("| + NPE fix for new entity stats                |");
-        getLogger().info("| + DiscordSRV events                           |");
-        getLogger().info("| + Fast startup (no blocking delay)            |");
+        getLogger().info("| + All Issues Fixed                            |");
+        getLogger().info("| + DiscordSRV + PlaceholderAPI                 |");
+        getLogger().info("| + Fast startup                                |");
         getLogger().info("*---------------------------------------------*");
-        getLogger().info("  Ready!");
+        getLogger().info("Started in " + (System.currentTimeMillis() - startTime) + "ms!");
     }
 
     @Override
@@ -147,6 +155,7 @@ public final class Main extends JavaPlugin implements PlayerStatsRemake {
 
         databaseManager = new com.fernsehheft.playerstatsremake.core.database.DatabaseManager(this, config);
         registerClosable(databaseManager);
+        playerColorManager = new com.fernsehheft.playerstatsremake.core.config.PlayerColorManager(this);
     }
 
     /**
@@ -164,6 +173,13 @@ public final class Main extends JavaPlugin implements PlayerStatsRemake {
         if (excludecmd != null) {
             excludecmd.setExecutor(new ExcludeCommand());
             excludecmd.setTabCompleter(tabCompleter);
+        }
+
+        PluginCommand colorcmd = this.getCommand("statcolor");
+        if (colorcmd != null) {
+            com.fernsehheft.playerstatsremake.core.commands.ColorCommand colorExecutor = new com.fernsehheft.playerstatsremake.core.commands.ColorCommand();
+            colorcmd.setExecutor(colorExecutor);
+            colorcmd.setTabCompleter(colorExecutor);
         }
 
         PluginCommand reloadcmd = this.getCommand("statisticreload");

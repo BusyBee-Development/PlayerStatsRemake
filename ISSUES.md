@@ -12,8 +12,9 @@ Here is the complete list of all issues we inherited from the original plugin.
 - [x] **#166 & #165 & #97** - Feature: API Events for DiscordSRV Alert Usage (Fixed via `StatCalculatedEvent` & `StatSharedEvent`)
 - [x] **#164** - Bug: Startup delay on Purpur/Paper 1.21+ (Fixed by delaying metrics setup)
 - [x] **#151** - Ability to modify time display (Added time.day.short etc. to language.yml)
-- [x] **#136** - Total amount of all mined blocks (without specifying a block)
-- [x] **#160 & #85** - Option to pull data from files and send it to MySQL database
+- `[x]` **#136** - Total amount of all mined blocks (without specifying a block)
+- `[x]` **#160 & #85** - Option to pull data from files and send it to MySQL database
+- `[x]` **#39** - Allow custom colors for players
 
 ## 🟡 Open (Bugfixes & Quality of Life)
 - [ ] **#154** - Add pagination / more than top 10
@@ -26,6 +27,5 @@ Here is the complete list of all issues we inherited from the original plugin.
 - [ ] **#147** - The ability to run a command(s) when players achieves stat numbers (Achievements)
 - [ ] **#146** - Custom top static
 - [ ] **#51** - Look into notification-for-update feature
-- [ ] **#39** - Allow custom colors for players?
 - [ ] **#29** - Display rank number for individual statistics
 - [ ] **#27** - Future idea: competitive leaderboards

@@ -169,8 +169,15 @@ public class ComponentFactory {
     }
 
     public TextComponent playerName(String playerName, Target target) {
+        TextColor color = null;
+        if (com.fernsehheft.playerstatsremake.core.Main.getPlayerColorManager() != null) {
+            color = com.fernsehheft.playerstatsremake.core.Main.getPlayerColorManager().getColorByPlayerName(playerName);
+        }
+        if (color == null) {
+            color = getColorFromString(config.getPlayerNameDecoration(target, false));
+        }
         return getComponent(playerName,
-                getColorFromString(config.getPlayerNameDecoration(target, false)),
+                color,
                 getStyleFromString(config.getPlayerNameDecoration(target, true)));
     }
 

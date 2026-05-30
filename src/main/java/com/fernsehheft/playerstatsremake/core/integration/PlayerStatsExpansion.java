@@ -76,31 +76,34 @@ public class PlayerStatsExpansion extends PlaceholderExpansion {
 
         try {
             var generator = api.getStatManager().createPlayerStatRequest(player.getName());
-            generator.stat(stat);
+            StatRequest<Integer> request = null;
 
             if (subStatName != null) {
                 if (stat.getType() == Statistic.Type.BLOCK || stat.getType() == Statistic.Type.ITEM) {
                     Material mat = Material.matchMaterial(subStatName);
                     if (mat != null) {
-                        generator.blockOrItem(mat);
+                        request = generator.blockOrItemType(stat, mat);
                     } else {
                         return null;
                     }
                 } else if (stat.getType() == Statistic.Type.ENTITY) {
                     try {
                         EntityType type = EntityType.valueOf(subStatName);
-                        generator.entity(type);
+                        request = generator.entityType(stat, type);
                     } catch (IllegalArgumentException e) {
                         return null;
                     }
                 }
+            } else {
+                request = generator.untyped(stat);
             }
 
-            StatRequest<Integer> request = generator.build();
+            if (request == null) return null;
+
             StatResult<Integer> result = api.getStatManager().executePlayerStatRequest(request);
             
             // Just return the raw number so users can use it in math expansions if needed
-            return String.valueOf(result.getNumericalValue());
+            return String.valueOf(result.value());
         } catch (Exception e) {
             return null;
         }

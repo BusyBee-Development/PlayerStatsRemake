@@ -52,6 +52,11 @@ public final class Main extends JavaPlugin implements PlayerStatsRemake {
         // register the listener
         Bukkit.getPluginManager().registerEvents(new JoinListener(), this);
 
+        // register internal PlaceholderAPI Expansion
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            new com.fernsehheft.playerstatsremake.core.integration.PlayerStatsExpansion(this).register();
+        }
+
         // Pretty startup banner
         String version = this.getPluginMeta().getVersion();
         getLogger().info("*---------------------------------------------*");

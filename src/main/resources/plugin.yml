@@ -1,6 +1,6 @@
 main: com.fernsehheft.playerstatsremake.core.Main
 name: PlayerStatsRemake
-version: 1.0.0
+version: 1.1.0
 api-version: 1.20
 folia-supported: true
 description: A modern, actively maintained statistics plugin for Minecraft servers

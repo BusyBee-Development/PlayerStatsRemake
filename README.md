@@ -49,6 +49,10 @@ PlayerStatsRemake is a Minecraft server plugin that adds commands to view player
 
 ## What's New in PlayerStatsRemake
 
+### ✨ Built-in PlaceholderAPI Support
+No more broken eCloud downloads! PlayerStatsRemake now has **100% built-in PlaceholderAPI support**. 
+You can use `%playerstats_<stat_name>_[sub_stat_name]%` (e.g. `%playerstats_play_one_minute%` or `%playerstats_mine_block_stone%`) immediately after installing!
+
 ### Bug Fixes (from original issues)
 | Issue | Description | Status |
 |-------|-------------|--------|

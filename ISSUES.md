@@ -3,6 +3,7 @@
 Here is the complete list of all issues we inherited from the original plugin.
 
 ## 🟢 Already Fixed (Done)
+- [x] **#152** - Console error message (Bug) (Fixed by integrating PAPI directly)
 - [x] **#155** - Recommendation: Remove default permissions (Removed from plugin.yml)
 - [x] **#176 & #175** - Bug: `happy_ghast` / NPE for new entities (Fixed via null-checks)
 - [x] **#173** - Feature: Support Folia (Fixed using GlobalRegionScheduler)
@@ -11,7 +12,6 @@ Here is the complete list of all issues we inherited from the original plugin.
 
 ## 🟡 Open (Bugfixes & Quality of Life)
 - [ ] **#154** - Add pagination / more than top 10
-- [ ] **#152** - Console error message (Bug)
 - [ ] **#151** - Ability to modify time display
 - [ ] **#144** - Invalid statistic (Bug)
 - [ ] **#141** - Formatted number (e.g., 10,000 instead of 10000)

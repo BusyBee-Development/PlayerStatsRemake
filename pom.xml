@@ -50,6 +50,12 @@
             <id>sonatype-oss-snapshots1</id>
             <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
         </repository>
+
+        <!-- Scarsz (DiscordSRV) -->
+        <repository>
+            <id>scarsz</id>
+            <url>https://nexus.scarsz.me/content/groups/public/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -130,6 +136,14 @@
                     <artifactId>annotations</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <!-- DiscordSRV -->
+        <dependency>
+            <groupId>com.discordsrv</groupId>
+            <artifactId>discordsrv</artifactId>
+            <version>1.28.0</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Config Updater (Maven Central) -->

@@ -57,6 +57,11 @@ public final class Main extends JavaPlugin implements PlayerStatsRemake {
             new com.fernsehheft.playerstatsremake.core.integration.PlayerStatsExpansion(this).register();
         }
 
+        // register DiscordSRV Integration
+        if (Bukkit.getPluginManager().getPlugin("DiscordSRV") != null) {
+            Bukkit.getPluginManager().registerEvents(new com.fernsehheft.playerstatsremake.core.integration.DiscordSRVIntegration(), this);
+        }
+
         // Apply LogFilter to silence Spigot's "Invalid statistic in" spam
         Bukkit.getLogger().setFilter(new LogFilter());
 

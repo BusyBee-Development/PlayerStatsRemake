@@ -3,6 +3,8 @@
 Here is the complete list of all issues we inherited from the original plugin.
 
 ## 🟢 Already Fixed (Done)
+- [x] **#141** - Formatted number (e.g., `1.5M` instead of `1500000`) for placeholders (Fixed by adding `_short` suffix and `formatAbbreviatedNumber`)
+- [x] **#144** - "Invalid statistic in" console spam (Fixed by adding a global LogFilter for Spigot logs)
 - [x] **#152** - Console error message (Bug) (Fixed by integrating PAPI directly)
 - [x] **#155** - Recommendation: Remove default permissions (Removed from plugin.yml)
 - [x] **#176 & #175** - Bug: `happy_ghast` / NPE for new entities (Fixed via null-checks)
@@ -13,8 +15,6 @@ Here is the complete list of all issues we inherited from the original plugin.
 ## 🟡 Open (Bugfixes & Quality of Life)
 - [ ] **#154** - Add pagination / more than top 10
 - [ ] **#151** - Ability to modify time display
-- [ ] **#144** - Invalid statistic (Bug)
-- [ ] **#141** - Formatted number (e.g., 10,000 instead of 10000)
 - [ ] **#134** - Make a language file for plugin messages
 - [ ] **#133** - Add hovertext to explain the secret birthday theme
 - [ ] **#132** - Make config setting to set specific themes

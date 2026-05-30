@@ -44,6 +44,11 @@ public class PlayerStatsExpansion extends PlaceholderExpansion {
     public @Nullable String onRequest(OfflinePlayer player, @NotNull String params) {
         if (player == null) return null;
 
+        boolean useShort = params.toUpperCase().endsWith("_SHORT");
+        if (useShort) {
+            params = params.substring(0, params.length() - 6);
+        }
+
         String[] split = params.toUpperCase().split("_");
         
         Statistic stat = null;
@@ -102,8 +107,11 @@ public class PlayerStatsExpansion extends PlaceholderExpansion {
 
             StatResult<Integer> result = api.getStatManager().executePlayerStatRequest(request);
             
-            // Just return the raw number so users can use it in math expansions if needed
-            return String.valueOf(result.value());
+            if (useShort) {
+                return api.getStatNumberFormatter().formatAbbreviatedNumber(result.value());
+            } else {
+                return String.valueOf(result.value());
+            }
         } catch (Exception e) {
             return null;
         }

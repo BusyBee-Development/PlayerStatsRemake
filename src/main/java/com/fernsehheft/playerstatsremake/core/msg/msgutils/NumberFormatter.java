@@ -31,6 +31,24 @@ public final class NumberFormatter implements StatNumberFormatter {
     }
 
     /**
+     * Formats large numbers with suffixes (k, M, B).
+     * For example: 1200 -> 1.2k, 1500000 -> 1.5M
+     */
+    @Override
+    public @NotNull String formatAbbreviatedNumber(long number) {
+        if (number < 1000) {
+            return String.valueOf(number);
+        }
+        if (number < 1_000_000) {
+            return String.format("%.1fk", number / 1000.0).replace(".0", "");
+        }
+        if (number < 1_000_000_000) {
+            return String.format("%.1fM", number / 1_000_000.0).replace(".0", "");
+        }
+        return String.format("%.1fB", number / 1_000_000_000.0).replace(".0", "");
+    }
+
+    /**
      * The unit of damage-based statistics is half a heart by default.
      * This method turns the number into hearts.
      */

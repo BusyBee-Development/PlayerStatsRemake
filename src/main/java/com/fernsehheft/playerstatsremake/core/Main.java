@@ -57,6 +57,9 @@ public final class Main extends JavaPlugin implements PlayerStatsRemake {
             new com.fernsehheft.playerstatsremake.core.integration.PlayerStatsExpansion(this).register();
         }
 
+        // Apply LogFilter to silence Spigot's "Invalid statistic in" spam
+        Bukkit.getLogger().setFilter(new LogFilter());
+
         // Pretty startup banner
         String version = this.getPluginMeta().getVersion();
         getLogger().info("*---------------------------------------------*");

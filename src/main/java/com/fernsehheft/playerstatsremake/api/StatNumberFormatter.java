@@ -6,6 +6,8 @@ public interface StatNumberFormatter {
 
     String formatDefaultNumber(long number);
 
+    String formatAbbreviatedNumber(long number);
+
     String formatDamageNumber(long number, Unit statUnit);
 
     String formatDistanceNumber(long number, Unit statUnit);

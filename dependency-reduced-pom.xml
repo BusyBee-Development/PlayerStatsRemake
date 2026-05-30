@@ -1,38 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>io.github.ithotl</groupId>
-  <artifactId>PlayerStats</artifactId>
-  <name>PlayerStats</name>
-  <version>2.6</version>
-  <description>Statistics Plugin</description>
-  <url>https://www.spigotmc.org/resources/playerstats.102347/</url>
-  <developers>
-    <developer>
-      <name>Artemis</name>
-      <email>artemis.the.gr8@gmail.com</email>
-      <url>https://github.com/Artemis-the-gr8</url>
-    </developer>
-  </developers>
+  <groupId>com.fernsehheft</groupId>
+  <artifactId>PlayerStatsRemake</artifactId>
+  <name>PlayerStatsRemake</name>
+  <version>1.0.0</version>
+  <description>A modern, actively maintained fork of PlayerStats with Folia support, bug fixes, and new features</description>
+  <url>https://github.com/Fernsehheft/PlayerStatsRemake</url>
   <licenses>
     <license>
       <name>MIT License</name>
       <url>http://www.opensource.org/licenses/mit-license.php</url>
     </license>
   </licenses>
-  <scm>
-    <connection>scm:git:git://github.com/itHotL/PlayerStats.git</connection>
-    <developerConnection>scm:git:git://github.com/itHotL/PlayerStats.git</developerConnection>
-    <url>https://github.com/itHotL/PlayerStats/tree/main</url>
-  </scm>
   <build>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.14.0</version>
         <configuration>
-          <source>16</source>
-          <target>16</target>
+          <source>17</source>
+          <target>17</target>
         </configuration>
       </plugin>
       <plugin>
@@ -49,7 +37,7 @@
         <configuration>
           <transformers>
             <transformer>
-              <mainClass>com.artemis.the.gr8.playerstats.core.Main</mainClass>
+              <mainClass>com.fernsehheft.playerstatsremake.core.Main</mainClass>
             </transformer>
           </transformers>
           <artifactSet>
@@ -60,11 +48,11 @@
           <relocations>
             <relocation>
               <pattern>net.kyori</pattern>
-              <shadedPattern>com.artemis.the.gr8.playerstats.lib.kyori</shadedPattern>
+              <shadedPattern>com.fernsehheft.playerstatsremake.lib.kyori</shadedPattern>
             </relocation>
             <relocation>
               <pattern>com.tchristofferson</pattern>
-              <shadedPattern>com.artemis.the.gr8.playerstats.lib.tchristofferson</shadedPattern>
+              <shadedPattern>com.fernsehheft.playerstatsremake.lib.tchristofferson</shadedPattern>
             </relocation>
           </relocations>
           <filters>
@@ -78,109 +66,43 @@
           </filters>
         </configuration>
       </plugin>
-      <plugin>
-        <artifactId>maven-source-plugin</artifactId>
-        <version>3.3.1</version>
-        <executions>
-          <execution>
-            <id>attach-sources</id>
-            <phase>deploy</phase>
-            <goals>
-              <goal>jar-no-fork</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-gpg-plugin</artifactId>
-        <version>3.2.7</version>
-        <executions>
-          <execution>
-            <id>sign-artifacts</id>
-            <phase>deploy</phase>
-            <goals>
-              <goal>sign</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.11.2</version>
-        <executions>
-          <execution>
-            <id>attach-javadocs</id>
-            <phase>deploy</phase>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <additionalOptions>-Xdoclint:none</additionalOptions>
-          <failOnError>false</failOnError>
-          <quiet>true</quiet>
-          <show>protected</show>
-          <groups>
-            <group>
-              <title>API</title>
-              <packages>com.artemis.the.gr8.playerstats.api</packages>
-            </group>
-          </groups>
-          <detectLinks>true</detectLinks>
-          <dependencyLinks>
-            <dependencyLink>
-              <groupId>org.spigotmc</groupId>
-              <artifactId>spigot-api</artifactId>
-              <url>https://hub.spigotmc.org/javadocs/bukkit/</url>
-            </dependencyLink>
-            <dependencyLink>
-              <groupId>net.kyori</groupId>
-              <artifactId>adventure-api</artifactId>
-              <url>https://jd.adventure.kyori.net/api/4.14.0/</url>
-            </dependencyLink>
-            <dependencyLink>
-              <groupId>net.kyori</groupId>
-              <artifactId>adventure-text-minimessage</artifactId>
-              <url>https://jd.adventure.kyori.net/text-minimessage/4.14.0/</url>
-            </dependencyLink>
-            <dependencyLink>
-              <groupId>net.kyori</groupId>
-              <artifactId>adventure-platform-bukkit</artifactId>
-              <url>https://jd.adventure.kyori.net/</url>
-            </dependencyLink>
-          </dependencyLinks>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-deploy-plugin</artifactId>
-        <version>3.1.4</version>
-      </plugin>
     </plugins>
   </build>
   <repositories>
     <repository>
-      <id>spigot-repo</id>
-      <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+      <id>papermc</id>
+      <url>https://repo.papermc.io/repository/maven-public/</url>
     </repository>
     <repository>
-      <id>sonatype-oss-snapshots1</id>
-      <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
-    </repository>
-    <repository>
-      <id>maven-central</id>
-      <url>https://oss.sonatype.org/content/groups/public</url>
+      <id>md-5</id>
+      <url>https://repo.md-5.net/content/repositories/public/</url>
     </repository>
     <repository>
       <id>placeholderapi</id>
       <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
     </repository>
+    <repository>
+      <id>sonatype-oss-snapshots1</id>
+      <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
+    </repository>
   </repositories>
   <dependencies>
     <dependency>
-      <groupId>org.spigotmc</groupId>
-      <artifactId>spigot-api</artifactId>
-      <version>1.21.7-R0.1-SNAPSHOT</version>
+      <groupId>io.papermc.paper</groupId>
+      <artifactId>paper-api</artifactId>
+      <version>1.21.4-R0.1-SNAPSHOT</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.mojang</groupId>
+      <artifactId>brigadier</artifactId>
+      <version>1.0.18</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>net.md-5</groupId>
+      <artifactId>bungeecord-chat</artifactId>
+      <version>1.16-R0.4</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -210,20 +132,10 @@
       <scope>compile</scope>
     </dependency>
   </dependencies>
-  <distributionManagement>
-    <repository>
-      <id>ossrh</id>
-      <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-    </repository>
-    <snapshotRepository>
-      <id>ossrh</id>
-      <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
-    </snapshotRepository>
-  </distributionManagement>
   <properties>
-    <maven.compiler.target>16</maven.compiler.target>
-    <java.version>16</java.version>
-    <maven.compiler.source>16</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+    <java.version>17</java.version>
+    <maven.compiler.source>17</maven.compiler.source>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 </project>

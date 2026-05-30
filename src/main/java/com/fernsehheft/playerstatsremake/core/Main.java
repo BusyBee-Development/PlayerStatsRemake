@@ -1,0 +1,194 @@
+package com.fernsehheft.playerstatsremake.core;
+
+import com.fernsehheft.playerstatsremake.api.PlayerStatsRemake;
+import com.fernsehheft.playerstatsremake.api.StatNumberFormatter;
+import com.fernsehheft.playerstatsremake.api.StatTextFormatter;
+import com.fernsehheft.playerstatsremake.api.StatManager;
+import com.fernsehheft.playerstatsremake.core.commands.*;
+import com.fernsehheft.playerstatsremake.core.msg.msgutils.NumberFormatter;
+import com.fernsehheft.playerstatsremake.core.multithreading.ThreadManager;
+import com.fernsehheft.playerstatsremake.core.msg.OutputManager;
+import com.fernsehheft.playerstatsremake.core.config.ConfigHandler;
+import com.fernsehheft.playerstatsremake.core.listeners.JoinListener;
+import com.fernsehheft.playerstatsremake.core.msg.msgutils.LanguageKeyHandler;
+import com.fernsehheft.playerstatsremake.core.sharing.ShareManager;
+import com.fernsehheft.playerstatsremake.core.statistic.StatRequestManager;
+import com.fernsehheft.playerstatsremake.core.utils.*;
+import me.clip.placeholderapi.PlaceholderAPIPlugin;
+import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import org.bukkit.Bukkit;
+import org.bukkit.command.PluginCommand;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * PlayerStatsRemake's Main class
+ */
+public final class Main extends JavaPlugin implements PlayerStatsRemake {
+
+    private static JavaPlugin pluginInstance;
+    private static PlayerStatsRemake playerStatsAPI;
+    private static ConfigHandler config;
+
+    private static ThreadManager threadManager;
+    private static StatRequestManager statManager;
+
+    private static List<Reloadable> reloadables;
+    private static List<Closable> closables;
+
+    @Override
+    public void onEnable() {
+        reloadables = new ArrayList<>();
+        closables = new ArrayList<>();
+
+        initializeMainClassesInOrder();
+        registerCommands();
+        setupMetrics();
+
+        // register the listener
+        Bukkit.getPluginManager().registerEvents(new JoinListener(), this);
+
+        // finish up
+        this.getLogger().info("Enabled PlayerStatsRemake!");
+    }
+
+    @Override
+    public void onDisable() {
+        closables.forEach(Closable::close);
+        this.getLogger().info("Disabled PlayerStatsRemake!");
+    }
+
+    public void reloadPlugin() {
+        // config is not registered as reloadable to ensure it can be reloaded before everything else
+        config.reload();
+        reloadables.forEach(Reloadable::reload);
+    }
+
+    public static void registerReloadable(Reloadable reloadable) {
+        reloadables.add(reloadable);
+    }
+
+    public static void registerClosable(Closable closable) {
+        closables.add(closable);
+    }
+
+    /**
+     * @return the JavaPlugin instance associated with PlayerStatsRemake
+     * @throws IllegalStateException if PlayerStatsRemake is not enabled
+     */
+    public static @NotNull JavaPlugin getPluginInstance() throws IllegalStateException {
+        if (pluginInstance == null) {
+            throw new IllegalStateException("PlayerStatsRemake is not loaded!");
+        }
+        return pluginInstance;
+    }
+
+    public static @NotNull PlayerStatsRemake getPlayerStatsAPI() throws IllegalStateException {
+        if (playerStatsAPI == null) {
+            throw new IllegalStateException("PlayerStatsRemake does not seem to be loaded!");
+        }
+        return playerStatsAPI;
+    }
+
+    /**
+     * Initialize all classes that need initializing,
+     * and store references to classes that are
+     * needed for the Command classes or the API.
+     */
+    private void initializeMainClassesInOrder() {
+        pluginInstance = this;
+        playerStatsAPI = this;
+        config = ConfigHandler.getInstance();
+
+        LanguageKeyHandler.getInstance();
+        OfflinePlayerHandler.getInstance();
+        OutputManager.getInstance();
+        ShareManager.getInstance();
+
+        statManager = new StatRequestManager();
+        threadManager = new ThreadManager(this);
+    }
+
+    /**
+     * Register all commands and assign the tabCompleter to the relevant commands.
+     */
+    private void registerCommands() {
+        TabCompleter tabCompleter = new TabCompleter();
+
+        PluginCommand statcmd = this.getCommand("statistic");
+        if (statcmd != null) {
+            statcmd.setExecutor(new StatCommand(threadManager));
+            statcmd.setTabCompleter(tabCompleter);
+        }
+        PluginCommand excludecmd = this.getCommand("statisticexclude");
+        if (excludecmd != null) {
+            excludecmd.setExecutor(new ExcludeCommand());
+            excludecmd.setTabCompleter(tabCompleter);
+        }
+
+        PluginCommand reloadcmd = this.getCommand("statisticreload");
+        if (reloadcmd != null) {
+            reloadcmd.setExecutor(new ReloadCommand(threadManager));
+        }
+        PluginCommand sharecmd = this.getCommand("statisticshare");
+        if (sharecmd != null) {
+            sharecmd.setExecutor(new ShareCommand());
+        }
+    }
+
+    /**
+     * Setup bstats – uses Folia-compatible GlobalRegionScheduler (fix for #164 startup delay).
+     */
+    private void setupMetrics() {
+        // Delay metrics setup to avoid startup lag (fix for issue #164)
+        // Use GlobalRegionScheduler for Folia compatibility (PR #170)
+        Bukkit.getGlobalRegionScheduler().runDelayed(pluginInstance, task -> {
+            final Metrics metrics = new Metrics(pluginInstance, 15923);
+
+            boolean placeholderExpansionActive;
+            if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+                PlaceholderExpansion expansion = PlaceholderAPIPlugin
+                        .getInstance()
+                        .getLocalExpansionManager()
+                        .getExpansion("playerstats");
+                placeholderExpansionActive = (expansion != null);
+            } else {
+                placeholderExpansionActive = false;
+            }
+            metrics.addCustomChart(new Metrics.SimplePie(
+                    "using_placeholder_expansion",
+                    () -> placeholderExpansionActive ? "yes" : "no"));
+
+            CommandCounter counter = CommandCounter.getInstance();
+            metrics.addCustomChart(new Metrics.AdvancedPie(
+                    "commands_used_the_last_30_minutes",
+                    counter::getCommandCounts));
+        }, 200L);
+    }
+
+    @Override
+    public @NotNull String getVersion() {
+        // Use getPluginMeta() instead of deprecated getDescription() (PR #170)
+        return String.valueOf(this.getPluginMeta().getVersion().charAt(0));
+    }
+
+    @Override
+    public StatManager getStatManager() {
+        return statManager;
+    }
+
+    @Override
+    public StatTextFormatter getStatTextFormatter() {
+        return OutputManager.getInstance().getMainMessageBuilder();
+    }
+
+    @Contract(" -> new")
+    @Override
+    public @NotNull StatNumberFormatter getStatNumberFormatter() {
+        return new NumberFormatter();
+    }
+}

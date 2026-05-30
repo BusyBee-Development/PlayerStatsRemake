@@ -6,14 +6,13 @@
 
 <p align="center">
   <strong>A modern, actively maintained fork of <a href="https://github.com/itHotL/PlayerStats">PlayerStats</a> by Artemis_the_gr8</strong>
-  <br>
-  All open issues fixed · All pull requests merged · Folia support · Java 17 · Paper API
+  All open issues fixed · All pull requests merged · Folia support · Java 21 · Paper API
 </p>
 
 <p align="center">
   <a href="https://github.com/itHotL/PlayerStats"><img src="https://img.shields.io/badge/Based%20on-PlayerStats%20by%20Artemis-blue" alt="Based on PlayerStats"></a>
   <img src="https://img.shields.io/badge/License-MIT-green" alt="MIT License">
-  <img src="https://img.shields.io/badge/Java-17-orange" alt="Java 17">
+  <img src="https://img.shields.io/badge/Java-21-orange" alt="Java 21">
   <img src="https://img.shields.io/badge/API-Paper%201.20%2B-blueviolet" alt="Paper API">
   <img src="https://img.shields.io/badge/Folia-supported-brightgreen" alt="Folia Supported">
 </p>
@@ -27,7 +26,7 @@
 - ✅ Fixed most GitHub issues from the original repository
 - ✅ Merged all pending pull requests
 - ✅ Added Folia server support
-- ✅ Modernized the codebase (Java 17, Paper API)
+- ✅ Modernized the codebase (Java 21, Paper API)
 - ✅ Kept the plugin up-to-date with new Minecraft versions
 
 > **Credits:** All original work, design, and concept belongs to **Artemis_the_gr8**. This fork is released under the same [MIT License](LICENSE).  
@@ -171,7 +170,7 @@ If you were using the original PlayerStats plugin, note these changes:
 | Package | `com.artemis.the.gr8.playerstats` | `com.fernsehheft.playerstatsremake` |
 | API class | `PlayerStats.getAPI()` | `PlayerStatsRemake.getAPI()` |
 | Permissions | `playerstats.*` | `playerstatsremake.*` |
-| Java version | 16 | 17 |
+| Java version | 16 | 21 |
 | Server API | Spigot | Paper (Spigot compatible) |
 
 &nbsp;

@@ -38,12 +38,12 @@ jobs:
             echo "skip=false" >> $GITHUB_ENV
           fi
 
-      - name: Setup Java 17
+      - name: Setup Java 21
         if: env.skip == 'false'
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '21'
           cache: 'maven'
 
       - name: Sync pom.xml version

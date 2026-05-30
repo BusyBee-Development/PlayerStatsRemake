@@ -1,6 +1,7 @@
 name: Auto Release on Version Bump
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -12,18 +13,17 @@ jobs:
   build-and-release:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # Needed to create a release
+      contents: write
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Required to check existing tags
+          fetch-depth: 0
 
       - name: Extract Version from plugin.yml
         id: extract_version
         run: |
-          # Extrahiert die Version aus der plugin.yml (ignoriert Leerzeichen und Anführungszeichen)
           VERSION=$(grep '^version:' src/main/resources/plugin.yml | awk '{print $2}' | tr -d '"'\'' ')
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "Extracted version: $VERSION"
@@ -65,9 +65,9 @@ jobs:
           name: "PlayerStatsRemake v${{ env.VERSION }}"
           generate_release_notes: true
           body: |
-            🚀 **PlayerStatsRemake v${{ env.VERSION }}** has been released!
+            **PlayerStatsRemake v${{ env.VERSION }}** has been released!
             
-            ### 💻 API Usage (JitPack)
+            ### API Usage (JitPack)
             To use this version in your own plugin, add JitPack to your repositories and use the following dependency:
             
             ```xml

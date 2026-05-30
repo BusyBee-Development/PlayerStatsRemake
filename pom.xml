@@ -154,6 +154,14 @@
             <scope>compile</scope>
         </dependency>
 
+        <!-- HikariCP (Database Connection Pooling) -->
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>5.1.0</version>
+            <scope>compile</scope>
+        </dependency>
+
         <!-- JetBrains annotations -->
         <dependency>
             <groupId>org.jetbrains</groupId>

@@ -64,6 +64,18 @@ public final class StatCommand implements CommandExecutor {
             commandCounter.upHelpCommandCount();
             outputManager.sendExamples(sender);
         }
+        else if (args[0].equalsIgnoreCase("export")) {
+            if (sender.hasPermission("playerstats.admin")) {
+                if (args.length > 1 && args[1].equalsIgnoreCase("mysql")) {
+                    sender.sendMessage("§aStarting MySQL export in background...");
+                    com.fernsehheft.playerstatsremake.core.Main.getDatabaseManager().exportAllStats();
+                } else {
+                    sender.sendMessage("§cUsage: /stat export mysql");
+                }
+            } else {
+                sender.sendMessage("§cYou do not have permission to use this command.");
+            }
+        }
         else {
             ArgProcessor processor = new ArgProcessor(sender, args);
             if (processor.request != null && processor.request.isValid()) {
@@ -161,21 +173,33 @@ public final class StatCommand implements CommandExecutor {
             switch (statistic.getType()) {
                 case UNTYPED -> request = requestGenerator.untyped(statistic);
                 case BLOCK -> {
-                    Material block = enumHandler.getBlockEnum(subStatName);
-                    if (block != null) {
-                        request = requestGenerator.blockOrItemType(statistic, block);
+                    if (subStatName == null) {
+                        request = requestGenerator.blockOrItemType(statistic, null);
+                    } else {
+                        Material block = enumHandler.getBlockEnum(subStatName);
+                        if (block != null) {
+                            request = requestGenerator.blockOrItemType(statistic, block);
+                        }
                     }
                 }
                 case ITEM -> {
-                    Material item = enumHandler.getItemEnum(subStatName);
-                    if (item != null) {
-                        request = requestGenerator.blockOrItemType(statistic, item);
+                    if (subStatName == null) {
+                        request = requestGenerator.blockOrItemType(statistic, null);
+                    } else {
+                        Material item = enumHandler.getItemEnum(subStatName);
+                        if (item != null) {
+                            request = requestGenerator.blockOrItemType(statistic, item);
+                        }
                     }
                 }
                 case ENTITY -> {
-                    EntityType entity = enumHandler.getEntityEnum(subStatName);
-                    if (entity != null) {
-                        request = requestGenerator.entityType(statistic, entity);
+                    if (subStatName == null) {
+                        request = requestGenerator.entityType(statistic, null);
+                    } else {
+                        EntityType entity = enumHandler.getEntityEnum(subStatName);
+                        if (entity != null) {
+                            request = requestGenerator.entityType(statistic, entity);
+                        }
                     }
                 }
             }

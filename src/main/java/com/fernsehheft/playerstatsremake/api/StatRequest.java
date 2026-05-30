@@ -53,49 +53,32 @@ public abstract class StatRequest<T> {
     this.settings.statistic = statistic;
   }
 
-  protected void configureBlockOrItemType(@NotNull Statistic statistic, @NotNull Material material) throws IllegalArgumentException {
+  protected void configureBlockOrItemType(@NotNull Statistic statistic, @Nullable Material material) throws IllegalArgumentException {
     Statistic.Type type = statistic.getType();
-    if (type == Statistic.Type.BLOCK && material.isBlock()) {
+    if (type == Statistic.Type.BLOCK && (material == null || material.isBlock())) {
       this.settings.block = material;
     }
-    else if (type == Statistic.Type.ITEM && material.isItem()){
+    else if (type == Statistic.Type.ITEM && (material == null || material.isItem())){
       this.settings.item = material;
     }
     else {
-      throw new IllegalArgumentException("Either this statistic is not of Type.Block or Type.Item, or no valid block or item has been provided");
+      throw new IllegalArgumentException("This statistic is not of Type.Block or Type.Item, or invalid material provided");
     }
     this.settings.statistic = statistic;
-    this.settings.subStatEntryName = material.toString();
+    this.settings.subStatEntryName = material != null ? material.toString() : "Total";
   }
 
-  protected void configureEntityType(@NotNull Statistic statistic, @NotNull EntityType entityType) throws IllegalArgumentException {
+  protected void configureEntityType(@NotNull Statistic statistic, @Nullable EntityType entityType) throws IllegalArgumentException {
     if (statistic.getType() != Statistic.Type.ENTITY) {
       throw new IllegalArgumentException("This statistic is not of Type.Entity");
     }
     this.settings.statistic = statistic;
     this.settings.entity = entityType;
-    this.settings.subStatEntryName = entityType.toString();
+    this.settings.subStatEntryName = entityType != null ? entityType.toString() : "Total";
   }
 
   protected boolean hasMatchingSubStat() {
-    if (settings.statistic == null) {
-      return false;
-    }
-
-    switch (settings.statistic.getType()) {
-      case BLOCK -> {
-        return settings.block != null;
-      }
-      case ENTITY -> {
-        return settings.entity != null;
-      }
-      case ITEM -> {
-        return settings.item != null;
-      }
-      default -> {
-        return true;
-      }
-    }
+    return settings.statistic != null;
   }
 
 

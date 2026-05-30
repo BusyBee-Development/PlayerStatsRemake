@@ -3,6 +3,23 @@
 # ------------------------------------------------------------------------------------------------------ #
 config-version: 8
 
+#                                # ------------------------------- #                                     #
+#                                #            Database             #                                     #
+#                                # ------------------------------- #                                     #
+
+# Export statistics to a MySQL database (e.g., for website leaderboards)
+database:
+  enabled: false
+  host: 'localhost'
+  port: 3306
+  database: 'playerstats'
+  username: 'root'
+  password: 'password'
+  table-name: 'player_stats'
+  # If true, automatically exports all stats in the background every X minutes
+  auto-sync: false
+  sync-interval-minutes: 60
+
 
 #                                # ------------------------------- #                                     #
 #                                #            General              #                                     #

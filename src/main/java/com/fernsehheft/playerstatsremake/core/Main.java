@@ -40,6 +40,12 @@ public final class Main extends JavaPlugin implements PlayerStatsRemake {
     private static List<Reloadable> reloadables;
     private static List<Closable> closables;
 
+    private static com.fernsehheft.playerstatsremake.core.database.DatabaseManager databaseManager;
+
+    public static com.fernsehheft.playerstatsremake.core.database.DatabaseManager getDatabaseManager() {
+        return databaseManager;
+    }
+
     @Override
     public void onEnable() {
         reloadables = new ArrayList<>();
@@ -138,6 +144,9 @@ public final class Main extends JavaPlugin implements PlayerStatsRemake {
 
         statManager = new StatRequestManager();
         threadManager = new ThreadManager(this);
+
+        databaseManager = new com.fernsehheft.playerstatsremake.core.database.DatabaseManager(this, config);
+        registerClosable(databaseManager);
     }
 
     /**

@@ -74,7 +74,8 @@ public final class ConfigHandler extends YamlFileHandler {
         }
     }
 
-    /** Returns the desired debugging level.
+    /**
+     * Returns the desired debugging level.
      *
      * <br> 1 = low (only show unexpected errors)
      * <br> 2 = medium (detail all encountered exceptions, log main tasks and show time taken)
@@ -84,6 +85,42 @@ public final class ConfigHandler extends YamlFileHandler {
      */
     public int getDebugLevel() {
         return config.getInt("debug-level", 1);
+    }
+
+    public boolean isDatabaseEnabled() {
+        return config.getBoolean("database.enabled", false);
+    }
+
+    public String getDatabaseHost() {
+        return config.getString("database.host", "localhost");
+    }
+
+    public int getDatabasePort() {
+        return config.getInt("database.port", 3306);
+    }
+
+    public String getDatabaseName() {
+        return config.getString("database.database", "playerstats");
+    }
+
+    public String getDatabaseUsername() {
+        return config.getString("database.username", "root");
+    }
+
+    public String getDatabasePassword() {
+        return config.getString("database.password", "password");
+    }
+
+    public String getDatabaseTableName() {
+        return config.getString("database.table-name", "player_stats");
+    }
+
+    public boolean isDatabaseAutoSync() {
+        return config.getBoolean("database.auto-sync", false);
+    }
+
+    public int getDatabaseSyncInterval() {
+        return config.getInt("database.sync-interval-minutes", 60);
     }
 
     /**

@@ -100,7 +100,13 @@ public class PlayerStatsExpansion extends PlaceholderExpansion {
                     }
                 }
             } else {
-                request = generator.untyped(stat);
+                if (stat.getType() == Statistic.Type.UNTYPED) {
+                    request = generator.untyped(stat);
+                } else if (stat.getType() == Statistic.Type.BLOCK || stat.getType() == Statistic.Type.ITEM) {
+                    request = generator.blockOrItemType(stat, null);
+                } else if (stat.getType() == Statistic.Type.ENTITY) {
+                    request = generator.entityType(stat, null);
+                }
             }
 
             if (request == null) return null;

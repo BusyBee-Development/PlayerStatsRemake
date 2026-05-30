@@ -79,8 +79,32 @@ final class BukkitProcessor extends RequestProcessor {
         return switch (requestSettings.getStatistic().getType()) {
             case UNTYPED -> player.getStatistic(requestSettings.getStatistic());
             case ENTITY -> player.getStatistic(requestSettings.getStatistic(), requestSettings.getEntity());
-            case BLOCK -> player.getStatistic(requestSettings.getStatistic(), requestSettings.getBlock());
-            case ITEM -> player.getStatistic(requestSettings.getStatistic(), requestSettings.getItem());
+            case BLOCK -> {
+                if (requestSettings.getBlock() != null) {
+                    yield player.getStatistic(requestSettings.getStatistic(), requestSettings.getBlock());
+                } else {
+                    int sum = 0;
+                    for (org.bukkit.Material mat : org.bukkit.Material.values()) {
+                        if (mat.isBlock()) {
+                            try { sum += player.getStatistic(requestSettings.getStatistic(), mat); } catch (Exception ignored) {}
+                        }
+                    }
+                    yield sum;
+                }
+            }
+            case ITEM -> {
+                if (requestSettings.getItem() != null) {
+                    yield player.getStatistic(requestSettings.getStatistic(), requestSettings.getItem());
+                } else {
+                    int sum = 0;
+                    for (org.bukkit.Material mat : org.bukkit.Material.values()) {
+                        if (mat.isItem()) {
+                            try { sum += player.getStatistic(requestSettings.getStatistic(), mat); } catch (Exception ignored) {}
+                        }
+                    }
+                    yield sum;
+                }
+            }
         };
     }
 

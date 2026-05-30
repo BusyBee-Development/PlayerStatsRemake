@@ -69,8 +69,28 @@ final class StatAction extends RecursiveTask<ConcurrentHashMap<String, Integer>>
                 switch (requestSettings.getStatistic().getType()) {
                     case UNTYPED -> statistic = player.getStatistic(requestSettings.getStatistic());
                     case ENTITY -> statistic = player.getStatistic(requestSettings.getStatistic(), requestSettings.getEntity());
-                    case BLOCK -> statistic = player.getStatistic(requestSettings.getStatistic(), requestSettings.getBlock());
-                    case ITEM -> statistic = player.getStatistic(requestSettings.getStatistic(), requestSettings.getItem());
+                    case BLOCK -> {
+                        if (requestSettings.getBlock() != null) {
+                            statistic = player.getStatistic(requestSettings.getStatistic(), requestSettings.getBlock());
+                        } else {
+                            for (org.bukkit.Material mat : org.bukkit.Material.values()) {
+                                if (mat.isBlock()) {
+                                    try { statistic += player.getStatistic(requestSettings.getStatistic(), mat); } catch (Exception ignored) {}
+                                }
+                            }
+                        }
+                    }
+                    case ITEM -> {
+                        if (requestSettings.getItem() != null) {
+                            statistic = player.getStatistic(requestSettings.getStatistic(), requestSettings.getItem());
+                        } else {
+                            for (org.bukkit.Material mat : org.bukkit.Material.values()) {
+                                if (mat.isItem()) {
+                                    try { statistic += player.getStatistic(requestSettings.getStatistic(), mat); } catch (Exception ignored) {}
+                                }
+                            }
+                        }
+                    }
                 }
                 if (statistic > 0) {
                     allStats.put(playerName, statistic);

@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.Statistic;
 import org.bukkit.entity.EntityType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Creates an executable {@link StatRequest}. This Request holds all
@@ -32,7 +33,7 @@ public interface RequestGenerator<T> {
      * (with a block as <code>material</code>), or <code>statistic</code> is not of Type.Item
      * (with an item as <code>material</code>)
      */
-    StatRequest<T> blockOrItemType(@NotNull Statistic statistic, @NotNull Material material) throws IllegalArgumentException;
+    StatRequest<T> blockOrItemType(@NotNull Statistic statistic, @Nullable Material material) throws IllegalArgumentException;
 
     /** Gets an executable Request object for a Statistic of Statistic.Type Entity.
 
@@ -40,5 +41,5 @@ public interface RequestGenerator<T> {
      * @param entityType an EntityType
      * @return a {@link StatRequest}
      * @throws IllegalArgumentException if <code>statistic</code> is not of Type.Entity*/
-    StatRequest<T> entityType(@NotNull Statistic statistic, @NotNull EntityType entityType) throws IllegalArgumentException;
+    StatRequest<T> entityType(@NotNull Statistic statistic, @Nullable EntityType entityType) throws IllegalArgumentException;
 }

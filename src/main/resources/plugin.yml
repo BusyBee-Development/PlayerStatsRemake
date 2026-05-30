@@ -40,10 +40,10 @@ commands:
 permissions:
   playerstatsremake.stat:
     description: allows usage of /statistic
-    default: true
+    default: false
   playerstatsremake.share:
     description: allows sharing stats in chat
-    default: true
+    default: false
   playerstatsremake.exclude:
     description: allows usage of /statexclude
     default: op

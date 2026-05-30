@@ -109,8 +109,8 @@ PlayerStatsRemake is a Minecraft server plugin that adds commands to view player
 
 | Permission | Description | Default |
 |---|---|---|
-| `playerstatsremake.stat` | Use `/statistic` | everyone |
-| `playerstatsremake.share` | Share statistics in chat | everyone |
+| `playerstatsremake.stat` | Use `/statistic` | false |
+| `playerstatsremake.share` | Share statistics in chat | false |
 | `playerstatsremake.reload` | Reload the config with `/statreload` | OP only |
 | `playerstatsremake.exclude` | Exclude players with `/statexclude` | OP only |
 

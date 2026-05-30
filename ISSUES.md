@@ -3,13 +3,13 @@
 Here is the complete list of all issues we inherited from the original plugin.
 
 ## 🟢 Already Fixed (Done)
+- [x] **#155** - Recommendation: Remove default permissions (Removed from plugin.yml)
 - [x] **#176 & #175** - Bug: `happy_ghast` / NPE for new entities (Fixed via null-checks)
 - [x] **#173** - Feature: Support Folia (Fixed using GlobalRegionScheduler)
 - [x] **#166 & #165 & #97** - Feature: API Events for DiscordSRV Alert Usage (Fixed via `StatCalculatedEvent` & `StatSharedEvent`)
 - [x] **#164** - Bug: Startup delay on Purpur/Paper 1.21+ (Fixed by delaying metrics setup)
 
 ## 🟡 Open (Bugfixes & Quality of Life)
-- [ ] **#155** - Recommendation: Remove default permissions
 - [ ] **#154** - Add pagination / more than top 10
 - [ ] **#152** - Console error message (Bug)
 - [ ] **#151** - Ability to modify time display

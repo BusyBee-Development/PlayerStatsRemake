@@ -181,6 +181,20 @@ public final class ConfigHandler extends YamlFileHandler {
     }
 
     /**
+     * Whether to check Modrinth for newer plugin versions on startup.
+     */
+    public boolean checkForUpdates() {
+        return config.getBoolean("check-for-updates", true);
+    }
+
+    /**
+     * Whether online operators are notified when they join and an update is available.
+     */
+    public boolean notifyOpsAboutUpdates() {
+        return config.getBoolean("notify-ops-about-updates", true);
+    }
+
+    /**
      * Whether to use TranslatableComponents wherever possible.
      *
      * @return the config setting (default: true)

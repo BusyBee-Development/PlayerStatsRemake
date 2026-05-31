@@ -4,6 +4,7 @@ import com.fernsehheft.playerstatsremake.api.StatTextFormatter;
 import com.fernsehheft.playerstatsremake.core.Main;
 import com.fernsehheft.playerstatsremake.core.config.ConfigHandler;
 import com.fernsehheft.playerstatsremake.core.enums.StandardMessage;
+import com.fernsehheft.playerstatsremake.core.utils.PlayerNameAnalysis;
 import com.fernsehheft.playerstatsremake.core.msg.components.*;
 import com.fernsehheft.playerstatsremake.core.msg.msgutils.FormattingFunction;
 import com.fernsehheft.playerstatsremake.api.StatRequest;
@@ -147,6 +148,33 @@ public final class OutputManager implements Reloadable, Closable {
             adventure.sender(sender).sendMessage(getMessageBuilder(sender)
                     .wrongSubStatType(statType, subStatName));
         }
+    }
+
+    public @NotNull TextComponent updateAvailableMessage(
+            @NotNull String currentVersion,
+            @NotNull String latestVersion,
+            @NotNull String downloadUrl) {
+        return messageBuilder.updateAvailableMessage(currentVersion, latestVersion, downloadUrl);
+    }
+
+    public void sendPlayerLookupFailure(
+            @NotNull CommandSender sender,
+            @NotNull PlayerNameAnalysis analysis,
+            @NotNull String playerName) {
+        MessageBuilder builder = getMessageBuilder(sender);
+        TextComponent message = switch (analysis.result()) {
+            case EXCLUDED_MANUAL -> builder.playerIsExcluded();
+            case WRONG_CASE -> builder.playerNameWrongCase(
+                    playerName,
+                    analysis.suggestedCorrectName() != null ? analysis.suggestedCorrectName() : playerName);
+            case UNKNOWN -> builder.unknownPlayerName(playerName);
+            case FILTERED_BANNED -> builder.playerFilteredBanned(playerName);
+            case FILTERED_WHITELIST -> builder.playerFilteredWhitelist(playerName);
+            case FILTERED_INACTIVE -> builder.playerFilteredInactive(
+                    playerName, config.getLastPlayedLimit());
+            case INCLUDED -> builder.unknownPlayerName(playerName);
+        };
+        adventure.sender(sender).sendMessage(message);
     }
 
     public void sendExamples(@NotNull CommandSender sender) {

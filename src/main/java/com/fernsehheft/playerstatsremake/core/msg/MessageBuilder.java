@@ -12,6 +12,7 @@ import com.fernsehheft.playerstatsremake.api.enums.Unit;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.Statistic;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -190,6 +191,41 @@ public final class MessageBuilder implements StatTextFormatter {
     public @NotNull TextComponent unknownError() {
         return composePluginMessage("Something went wrong with your request, " +
                 "please try again or see /statistic for a usage explanation!");
+    }
+
+    public @NotNull TextComponent updateAvailableMessage(
+            @NotNull String currentVersion,
+            @NotNull String latestVersion,
+            @NotNull String downloadUrl) {
+        return getPluginPrefix()
+                .append(space())
+                .append(componentFactory.message().content(
+                        "A new version is available: v" + latestVersion
+                                + " (you are running v" + currentVersion + "). "))
+                .append(componentFactory.messageAccent().content("Download on Modrinth")
+                        .clickEvent(ClickEvent.openUrl(downloadUrl)));
+    }
+
+    public @NotNull TextComponent unknownPlayerName(@NotNull String playerName) {
+        return composePluginMessage("\"" + playerName + "\" is not a known player on this server!");
+    }
+
+    public @NotNull TextComponent playerNameWrongCase(@NotNull String wrongName, @NotNull String correctName) {
+        return composePluginMessage("Player names are case-sensitive! Did you mean \"" + correctName + "\" instead of \"" + wrongName + "\"?");
+    }
+
+    public @NotNull TextComponent playerFilteredBanned(@NotNull String playerName) {
+        return composePluginMessage("\"" + playerName + "\" is excluded because banned players are hidden from statistics.");
+    }
+
+    public @NotNull TextComponent playerFilteredWhitelist(@NotNull String playerName) {
+        return composePluginMessage("\"" + playerName + "\" is excluded because only whitelisted players are included in statistics.");
+    }
+
+    public @NotNull TextComponent playerFilteredInactive(@NotNull String playerName, int dayLimit) {
+        String days = dayLimit == 1 ? "day" : "days";
+        return composePluginMessage("\"" + playerName + "\" is excluded because they have not been online in the last "
+                + dayLimit + " " + days + ".");
     }
 
     private @NotNull TextComponent composePluginMessage(String content) {

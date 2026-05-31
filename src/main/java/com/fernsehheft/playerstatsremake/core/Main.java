@@ -60,6 +60,7 @@ public final class Main extends JavaPlugin implements PlayerStatsRemake {
         initializeMainClassesInOrder();
         registerCommands();
         setupMetrics();
+        ModrinthUpdateChecker.getInstance(this).scheduleCheck();
 
         // register the listener
         Bukkit.getPluginManager().registerEvents(new JoinListener(), this);

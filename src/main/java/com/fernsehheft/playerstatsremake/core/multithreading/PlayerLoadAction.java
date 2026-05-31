@@ -1,9 +1,8 @@
 package com.fernsehheft.playerstatsremake.core.multithreading;
 
-import com.fernsehheft.playerstatsremake.core.config.ConfigHandler;
+import com.fernsehheft.playerstatsremake.core.utils.InclusionFilter;
 import com.fernsehheft.playerstatsremake.core.utils.MyLogger;
 import com.fernsehheft.playerstatsremake.core.utils.OfflinePlayerHandler;
-import com.fernsehheft.playerstatsremake.core.utils.UnixTimeHandler;
 import org.bukkit.OfflinePlayer;
 
 import java.util.UUID;
@@ -66,7 +65,6 @@ final class PlayerLoadAction extends RecursiveAction {
 
     private void process() {
         OfflinePlayerHandler offlinePlayerHandler = OfflinePlayerHandler.getInstance();
-        int lastPlayedLimit = ConfigHandler.getInstance().getLastPlayedLimit();
 
         for (int i = start; i < end; i++) {
             OfflinePlayer player = players[i];
@@ -74,7 +72,7 @@ final class PlayerLoadAction extends RecursiveAction {
             MyLogger.actionRunning(Thread.currentThread().getName());
             if (playerName != null &&
                     !offlinePlayerHandler.isExcludedPlayer(player.getUniqueId()) &&
-                    UnixTimeHandler.hasPlayedSince(lastPlayedLimit, player.getLastPlayed())) {
+                    !InclusionFilter.isExcludedFromStatistics(player)) {
                 offlinePlayerUUIDs.put(playerName, player.getUniqueId());
             }
         }

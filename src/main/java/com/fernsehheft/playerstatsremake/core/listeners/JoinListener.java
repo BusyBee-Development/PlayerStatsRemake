@@ -1,5 +1,7 @@
 package com.fernsehheft.playerstatsremake.core.listeners;
 
+import com.fernsehheft.playerstatsremake.core.Main;
+import com.fernsehheft.playerstatsremake.core.utils.ModrinthUpdateChecker;
 import com.fernsehheft.playerstatsremake.core.utils.OfflinePlayerHandler;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -27,5 +29,7 @@ public class JoinListener implements Listener {
         if (!player.hasPlayedBefore() && !offlinePlayerHandler.isExcludedPlayer(player.getUniqueId())) {
             offlinePlayerHandler.addNewIncludedPlayer(player);
         }
+
+        ModrinthUpdateChecker.getInstance(Main.getPluginInstance()).notifyOpIfNeeded(player);
     }
 }

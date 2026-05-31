@@ -55,6 +55,10 @@ number-of-days-since-last-joined: 0
 # the /stat player command
 allow-player-lookups-for-excluded-players: true
 
+# Check Modrinth for plugin updates on startup and notify the console / operators when a newer version exists
+check-for-updates: true
+notify-ops-about-updates: true
+
 
 #                                # ------------------------------- #                                     #
 #                                #        Format & Display         #                                     #

@@ -13,6 +13,7 @@ import com.fernsehheft.playerstatsremake.core.statistic.TopStatRequest;
 import com.fernsehheft.playerstatsremake.core.utils.CommandCounter;
 import com.fernsehheft.playerstatsremake.core.utils.EnumHandler;
 import com.fernsehheft.playerstatsremake.core.utils.OfflinePlayerHandler;
+import com.fernsehheft.playerstatsremake.core.utils.PlayerNameAnalysis;
 import org.bukkit.Material;
 import org.bukkit.Statistic;
 import org.bukkit.command.Command;
@@ -117,7 +118,12 @@ public final class StatCommand implements CommandExecutor {
             outputManager.sendFeedbackMsg(sender, StandardMessage.MISSING_STAT_NAME);
         }
         else if (processor.target == Target.PLAYER) {
-            if (processor.playerName == null) {
+            if (processor.playerLookupFailure != null) {
+                String nameForMessage = processor.attemptedPlayerName != null
+                        ? processor.attemptedPlayerName
+                        : "unknown";
+                outputManager.sendPlayerLookupFailure(sender, processor.playerLookupFailure, nameForMessage);
+            } else if (processor.playerName == null) {
                 outputManager.sendFeedbackMsg(sender, StandardMessage.MISSING_PLAYER_NAME);
             } else if (offlinePlayerHandler.isExcludedPlayer(processor.playerName) &&
                     !config.allowPlayerLookupsForExcludedPlayers()) {
@@ -145,6 +151,8 @@ public final class StatCommand implements CommandExecutor {
         private String subStatName;
         private Target target;
         private String playerName;
+        private @Nullable String attemptedPlayerName;
+        private @Nullable PlayerNameAnalysis playerLookupFailure;
         private StatRequest<?> request;
 
         private ArgProcessor(CommandSender sender, String[] args) {
@@ -222,7 +230,15 @@ public final class StatCommand implements CommandExecutor {
                         }
                         case "player" -> {
                             target = Target.PLAYER;
-                            playerName = tryToFindPlayerName(argsToProcess);
+                            String knownName = tryToFindPlayerName(argsToProcess);
+                            if (knownName != null) {
+                                playerName = knownName;
+                            } else {
+                                String attempted = extractAttemptedPlayerName(argsToProcess);
+                                if (attempted != null) {
+                                    applyPlayerNameAttempt(attempted);
+                                }
+                            }
                         }
                         case "server" -> target = Target.SERVER;
                         case "top" -> target = Target.TOP;
@@ -233,14 +249,51 @@ public final class StatCommand implements CommandExecutor {
             }
 
             if (targetArg == null) {
-                String playerName = tryToFindPlayerName(argsToProcess);
-                if (playerName != null) {
+                String knownName = tryToFindPlayerName(argsToProcess);
+                if (knownName != null) {
                     target = Target.PLAYER;
-                    this.playerName = playerName;
+                    playerName = knownName;
                 } else {
-                    target = Target.TOP;
+                    String attempted = extractAttemptedPlayerName(argsToProcess);
+                    if (attempted != null) {
+                        target = Target.PLAYER;
+                        applyPlayerNameAttempt(attempted);
+                    } else {
+                        target = Target.TOP;
+                    }
                 }
             }
+        }
+
+        private void applyPlayerNameAttempt(@NotNull String attempted) {
+            attemptedPlayerName = attempted;
+            PlayerNameAnalysis analysis = offlinePlayerHandler.analyzePlayerName(attempted);
+            if (analysis.isIncluded()) {
+                playerName = attempted;
+                playerLookupFailure = null;
+            } else {
+                playerName = null;
+                playerLookupFailure = analysis;
+            }
+        }
+
+        private @Nullable String extractAttemptedPlayerName(@NotNull String[] args) {
+            for (String arg : args) {
+                if (!isReservedCommandArg(arg)) {
+                    return arg;
+                }
+            }
+            return null;
+        }
+
+        private boolean isReservedCommandArg(@NotNull String arg) {
+            if (pattern.matcher(arg).matches()) {
+                return true;
+            }
+            if (enumHandler.isStatistic(arg)) {
+                return true;
+            }
+            return enumHandler.isSubStatEntry(arg);
         }
 
         private void extractStatistic() {

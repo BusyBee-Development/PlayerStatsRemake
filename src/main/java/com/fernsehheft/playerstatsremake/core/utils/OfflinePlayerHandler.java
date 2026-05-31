@@ -2,12 +2,14 @@ package com.fernsehheft.playerstatsremake.core.utils;
 
 import com.fernsehheft.playerstatsremake.core.Main;
 import com.fernsehheft.playerstatsremake.core.config.ConfigHandler;
+import com.fernsehheft.playerstatsremake.core.enums.PlayerLookupResult;
 import com.fernsehheft.playerstatsremake.core.multithreading.ThreadManager;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.*;
@@ -67,6 +69,48 @@ public final class OfflinePlayerHandler extends YamlFileHandler {
 
     public boolean isExcludedPlayer(String playerName) {
         return excludedPlayerUUIDs.containsKey(playerName);
+    }
+
+    /**
+     * Resolves why a player name may or may not be used for /statistic player lookups.
+     */
+    public @NotNull PlayerNameAnalysis analyzePlayerName(@NotNull String input) {
+        if (isIncludedPlayer(input)) {
+            return new PlayerNameAnalysis(PlayerLookupResult.INCLUDED, null);
+        }
+        if (isExcludedPlayer(input)) {
+            return new PlayerNameAnalysis(PlayerLookupResult.EXCLUDED_MANUAL, null);
+        }
+
+        String caseCorrectName = findCaseInsensitiveMatch(input);
+        if (caseCorrectName != null) {
+            return new PlayerNameAnalysis(PlayerLookupResult.WRONG_CASE, caseCorrectName);
+        }
+
+        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(input);
+        if (!offlinePlayer.hasPlayedBefore() && offlinePlayer.getName() == null) {
+            return new PlayerNameAnalysis(PlayerLookupResult.UNKNOWN, null);
+        }
+
+        if (InclusionFilter.isExcludedFromStatistics(offlinePlayer)) {
+            return new PlayerNameAnalysis(InclusionFilter.getConfigFilterReason(offlinePlayer), null);
+        }
+
+        return new PlayerNameAnalysis(PlayerLookupResult.UNKNOWN, null);
+    }
+
+    private @Nullable String findCaseInsensitiveMatch(@NotNull String input) {
+        for (String name : includedPlayerUUIDs.keySet()) {
+            if (name.equalsIgnoreCase(input)) {
+                return name;
+            }
+        }
+        for (String name : excludedPlayerUUIDs.keySet()) {
+            if (name.equalsIgnoreCase(input)) {
+                return name;
+            }
+        }
+        return null;
     }
 
     public boolean isExcludedPlayer(UUID uniqueID) {

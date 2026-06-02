@@ -14,6 +14,7 @@ import com.fernsehheft.playerstatsremake.core.msg.msgutils.LanguageKeyHandler;
 import com.fernsehheft.playerstatsremake.core.sharing.ShareManager;
 import com.fernsehheft.playerstatsremake.core.statistic.StatRequestManager;
 import com.fernsehheft.playerstatsremake.core.utils.*;
+import com.fernsehheft.playerstatsremake.core.managers.FastStatsManager;
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.Bukkit;
@@ -42,6 +43,7 @@ public final class Main extends JavaPlugin implements PlayerStatsRemake {
 
     private static com.fernsehheft.playerstatsremake.core.database.DatabaseManager databaseManager;
     private static com.fernsehheft.playerstatsremake.core.config.PlayerColorManager playerColorManager;
+    private FastStatsManager fastStatsManager;
 
     public static com.fernsehheft.playerstatsremake.core.database.DatabaseManager getDatabaseManager() {
         return databaseManager;
@@ -60,6 +62,8 @@ public final class Main extends JavaPlugin implements PlayerStatsRemake {
         initializeMainClassesInOrder();
         registerCommands();
         setupMetrics();
+        this.fastStatsManager = new FastStatsManager(this);
+        this.fastStatsManager.onEnable();
         ModrinthUpdateChecker.getInstance(this).scheduleCheck();
 
         // register the listener
@@ -98,6 +102,9 @@ public final class Main extends JavaPlugin implements PlayerStatsRemake {
 
     @Override
     public void onDisable() {
+        if (fastStatsManager != null) {
+            fastStatsManager.onDisable();
+        }
         closables.forEach(Closable::close);
         getLogger().info("");
         getLogger().info(" PlayerStatsRemake has been disabled. Goodbye!");

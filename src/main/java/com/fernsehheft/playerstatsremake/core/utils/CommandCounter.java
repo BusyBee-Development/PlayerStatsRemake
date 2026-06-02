@@ -12,6 +12,7 @@ public class CommandCounter {
     private int playerStatCommand;
     private int serverStatCommand;
     private int topStatCommand;
+    private int totalCommands;
 
     private CommandCounter() {
         resetCounts();
@@ -33,26 +34,32 @@ public class CommandCounter {
 
     public synchronized void upHelpCommandCount() {
         helpCommand++;
+        totalCommands++;
     }
 
     public synchronized void upExcludeCommandCount() {
         excludeCommand++;
+        totalCommands++;
     }
 
     public synchronized void upShareCommandCount() {
         shareCommand++;
+        totalCommands++;
     }
 
     public synchronized void upPlayerStatCommandCount() {
         playerStatCommand++;
+        totalCommands++;
     }
 
     public synchronized void upServerStatCommandCount() {
         serverStatCommand++;
+        totalCommands++;
     }
 
     public synchronized void upTopStatCommandCount() {
         topStatCommand++;
+        totalCommands++;
     }
 
     public Map<String, Integer> getCommandCounts() {
@@ -65,6 +72,10 @@ public class CommandCounter {
         commandCounts.put("Top Stat", topStatCommand);
         resetCounts();
         return commandCounts;
+    }
+
+    public synchronized int getTotalCommands() {
+        return totalCommands;
     }
 
     private synchronized void resetCounts() {

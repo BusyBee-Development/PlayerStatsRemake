@@ -17,6 +17,7 @@ Here is the complete list of all issues we inherited from the original plugin.
 - [x] **#39** - Allow custom colors for players
 - [x] **#53** - Improve feedback for wrong playerNames
 - [x] **#51** - Look into notification-for-update feature
+- [x] **00** - Added support for FastStats metrics
 
 ## 🟡 Open (Bugfixes & Quality of Life)
 - [ ] **#154** - Add pagination / more than top 10

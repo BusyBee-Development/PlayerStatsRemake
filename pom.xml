@@ -6,7 +6,7 @@
 
     <groupId>com.fernsehheft</groupId>
     <artifactId>PlayerStatsRemake</artifactId>
-    <version>2026.6.1</version>
+    <version>2026.6.0</version>
 
     <name>PlayerStatsRemake</name>
     <description>A modern, actively maintained fork of PlayerStats with Folia support, bug fixes, and new features</description>
@@ -55,6 +55,12 @@
         <repository>
             <id>scarsz</id>
             <url>https://nexus.scarsz.me/content/groups/public/</url>
+        </repository>
+
+        <!-- FastStats -->
+        <repository>
+            <id>faststats-releases</id>
+            <url>https://repo.faststats.dev/releases</url>
         </repository>
     </repositories>
 
@@ -168,6 +174,13 @@
             <artifactId>annotations</artifactId>
             <version>24.0.1</version>
         </dependency>
+
+        <!-- FastStats -->
+        <dependency>
+            <groupId>dev.faststats.metrics</groupId>
+            <artifactId>bukkit</artifactId>
+            <version>0.22.0</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -230,8 +243,18 @@
                             <pattern>com.tchristofferson</pattern>
                             <shadedPattern>com.fernsehheft.playerstatsremake.lib.tchristofferson</shadedPattern>
                         </relocation>
+                        <relocation>
+                            <pattern>dev.faststats</pattern>
+                            <shadedPattern>com.fernsehheft.playerstatsremake.lib.faststats</shadedPattern>
+                        </relocation>
                     </relocations>
                     <filters>
+                        <filter>
+                            <artifact>dev.faststats.metrics:*</artifact>
+                            <includes>
+                                <include>**</include>
+                            </includes>
+                        </filter>
                         <filter>
                             <artifact>*:*</artifact>
                             <excludes>

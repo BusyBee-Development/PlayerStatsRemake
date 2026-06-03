@@ -39,7 +39,21 @@ final class BukkitProcessor extends RequestProcessor {
     public @NotNull StatResult<Integer> processPlayerRequest(StatRequest<?> playerStatRequest) {
         StatRequest.Settings requestSettings = playerStatRequest.getSettings();
         int stat = getPlayerStat(requestSettings);
-        FormattingFunction formattingFunction = outputManager.formatPlayerStat(requestSettings, stat);
+
+        int rank = -1;
+        if (config.displayRankForIndividualStats()) {
+            if (stat > 0 || config.displayRankForZeroValue()) {
+                ConcurrentHashMap<String, Integer> allStats = getAllStatsAsync(requestSettings);
+                rank = 1;
+                for (int val : allStats.values()) {
+                    if (val > stat) {
+                        rank++;
+                    }
+                }
+            }
+        }
+
+        FormattingFunction formattingFunction = outputManager.formatPlayerStat(requestSettings, stat, rank);
         TextComponent formattedResult = processFunction(requestSettings.getCommandSender(), formattingFunction);
         String resultAsString = outputManager.textComponentToString(formattedResult);
 

@@ -347,8 +347,16 @@ public final class MessageBuilder implements StatTextFormatter {
 
     @Override
     public @NotNull TextComponent formatPlayerStat(String playerName, int statNumber, Statistic statistic, String subStatName) {
+        return formatPlayerStat(playerName, statNumber, statistic, subStatName, -1);
+    }
+
+    public @NotNull TextComponent formatPlayerStat(String playerName, int statNumber, Statistic statistic, String subStatName, int rank) {
         TextComponent statNumberComponent = getStatNumberComponent(statNumber, Target.PLAYER, statistic);
-        return getPlayerStatComponent(playerName, statNumberComponent, statistic, subStatName, null);
+        TextComponent base = getPlayerStatComponent(playerName, statNumberComponent, statistic, subStatName, null);
+        if (rank > 0) {
+            base = base.append(Component.space()).append(componentFactory.playerRank(rank));
+        }
+        return base;
     }
 
     @Override
@@ -369,7 +377,11 @@ public final class MessageBuilder implements StatTextFormatter {
      * as is.
      */
     public @NotNull FormattingFunction formattedPlayerStatFunction(int stat, @NotNull StatRequest.Settings request) {
-        TextComponent playerStat = formatPlayerStat(request.getPlayerName(), stat, request.getStatistic(), request.getSubStatEntryName());
+        return formattedPlayerStatFunction(stat, -1, request);
+    }
+
+    public @NotNull FormattingFunction formattedPlayerStatFunction(int stat, int rank, @NotNull StatRequest.Settings request) {
+        TextComponent playerStat = formatPlayerStat(request.getPlayerName(), stat, request.getStatistic(), request.getSubStatEntryName(), rank);
         return getFormattingFunction(playerStat, Target.PLAYER);
     }
 

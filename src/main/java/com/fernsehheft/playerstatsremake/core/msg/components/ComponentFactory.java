@@ -150,8 +150,22 @@ public class ComponentFactory {
 
     public TextComponent rankNumber(int number) {
         return getComponent(number + ".",
-                getColorFromString(config.getRankNumberDecoration(false)),
-                getStyleFromString(config.getRankNumberDecoration(true)));
+                getColorFromString(config.getRankNumberDecoration(Target.TOP, false)),
+                getStyleFromString(config.getRankNumberDecoration(Target.TOP, true)));
+    }
+
+    public TextComponent playerRank(int rank) {
+        TextColor rankNumColor = getColorFromString(config.getRankNumberDecoration(Target.PLAYER, false));
+        TextDecoration rankNumStyle = getStyleFromString(config.getRankNumberDecoration(Target.PLAYER, true));
+
+        TextComponent rankNumComp = getComponent("#" + rank, rankNumColor, rankNumStyle);
+
+        return text()
+                .append(text("(").color(BRACKETS))
+                .append(text("Rank ").color(FEEDBACK_MSG))
+                .append(rankNumComp)
+                .append(text(")").color(BRACKETS))
+                .build();
     }
 
     public TextComponent dots(String dots) {

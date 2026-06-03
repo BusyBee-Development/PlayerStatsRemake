@@ -21,7 +21,7 @@ public final class ConfigHandler extends YamlFileHandler {
         super("config.yml");
         config = super.getFileConfiguration();
 
-        configVersion = 8;
+        configVersion = 9;
         checkAndUpdateConfigVersion();
         MyLogger.setDebugLevel(getDebugLevel());
     }
@@ -259,6 +259,22 @@ public final class ConfigHandler extends YamlFileHandler {
      */
     public boolean useDots() {
         return config.getBoolean("use-dots", true);
+    }
+
+    /**
+     * Whether the player's rank number should be displayed for individual statistics.
+     * @return the config setting (default: true)
+     */
+    public boolean displayRankForIndividualStats() {
+        return config.getBoolean("display-rank", true);
+    }
+
+    /**
+     * Whether to show a rank if the player has a statistic value of 0.
+     * @return the config setting (default: false)
+     */
+    public boolean displayRankForZeroValue() {
+        return config.getBoolean("display-rank-for-zero-value", false);
     }
 
     /**
@@ -557,8 +573,8 @@ public final class ConfigHandler extends YamlFileHandler {
      * <br>Style: "none"
      * <br>Color: "gold"
      */
-    public String getRankNumberDecoration(boolean getStyleSetting) {
-        return getDecorationString(Target.TOP, getStyleSetting, "gold", "rank-numbers");
+    public String getRankNumberDecoration(Target selection, boolean getStyleSetting) {
+        return getDecorationString(selection, getStyleSetting, "gold", "rank-numbers");
     }
 
     /**

@@ -1,7 +1,7 @@
 # ------------------------------------------------------------------------------------------------------ #
 #                                     PlayerStats Configuration                                          #
 # ------------------------------------------------------------------------------------------------------ #
-config-version: 8
+config-version: 9
 
 #                                # ------------------------------- #                                     #
 #                                #            Database             #                                     #
@@ -88,6 +88,14 @@ use-enters:
 
 # Align the stat-numbers in the top list with dots
 use-dots: true
+
+# Display the player's rank number for individual statistics
+# If true, queries for individual statistics will also show their rank compared to other players
+display-rank: true
+
+# If display-rank is true, choose whether to show a rank if the player has a statistic value of 0.
+# If false, players with a value of 0 will not have a rank displayed.
+display-rank-for-zero-value: false
 
 # The maximum number of results displayed in the top list
 top-list-max-size: 10
@@ -199,6 +207,9 @@ individual-statistics:
 
   stat-numbers: '#ADE7FF'
   stat-numbers-style: none
+
+  rank-numbers: gold
+  rank-numbers-style: none
 
 
 total-server:

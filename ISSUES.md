@@ -19,6 +19,7 @@ Here is the complete list of all issues we inherited from the original plugin.
 - [x] **#51** - Look into notification-for-update feature
 - [x] **00** - Added support for FastStats metrics
 - [x] **#154** - Add pagination / more than top 10 
+- [x] **#29** - Display rank number for individual statistics
 
 ## 🟡 Open (Bugfixes & Quality of Life)
 - [ ] **#134** - Make a language file for plugin messages
@@ -28,5 +29,4 @@ Here is the complete list of all issues we inherited from the original plugin.
 ## 🔴 Open (Major New Features)
 - [ ] **#147** - The ability to run a command(s) when players achieves stat numbers (Achievements)
 - [ ] **#146** - Custom top static
-- [ ] **#29** - Display rank number for individual statistics
 - [ ] **#27** - Future idea: competitive leaderboards

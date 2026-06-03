@@ -94,8 +94,16 @@ public final class OutputManager implements Reloadable, Closable {
      * <br>[player-name]: [number] [stat-name] {sub-stat-name}
      */
     public @NotNull FormattingFunction formatPlayerStat(@NotNull StatRequest.Settings requestSettings, int playerStat) {
+        return formatPlayerStat(requestSettings, playerStat, -1);
+    }
+
+    /**
+     * @return a TextComponent with the following parts:
+     * <br>[player-name]: [number] [stat-name] {sub-stat-name} (Rank #[rank])
+     */
+    public @NotNull FormattingFunction formatPlayerStat(@NotNull StatRequest.Settings requestSettings, int playerStat, int rank) {
         return getMessageBuilder(requestSettings.getCommandSender())
-                .formattedPlayerStatFunction(playerStat, requestSettings);
+                .formattedPlayerStatFunction(playerStat, rank, requestSettings);
     }
 
     /**

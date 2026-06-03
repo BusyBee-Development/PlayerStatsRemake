@@ -270,22 +270,22 @@ public final class MessageBuilder implements StatTextFormatter {
 
     @Override
     public @NotNull TextComponent getStatTitle(Statistic statistic, @Nullable String subStatName) {
-        return getTopStatTitleComponent(0, statistic, subStatName, null);
+        return getTopStatTitleComponent(0, 1, statistic, subStatName, null);
     }
 
     @Override
     public @NotNull TextComponent getStatTitle(Statistic statistic, Unit unit) {
-        return getTopStatTitleComponent(0, statistic, null, unit);
+        return getTopStatTitleComponent(0, 1, statistic, null, unit);
     }
 
     @Override
     public @NotNull TextComponent getTopStatTitle(int topListSize, Statistic statistic, @Nullable String subStatName) {
-        return getTopStatTitleComponent(topListSize, statistic, subStatName, null);
+        return getTopStatTitleComponent(topListSize, 1, statistic, subStatName, null);
     }
 
     @Override
     public @NotNull TextComponent getTopStatTitle(int topStatSize, Statistic statistic, Unit unit) {
-        return getTopStatTitleComponent(topStatSize, statistic, null, unit);
+        return getTopStatTitleComponent(topStatSize, 1, statistic, null, unit);
     }
 
     @Override
@@ -401,8 +401,8 @@ public final class MessageBuilder implements StatTextFormatter {
      * as is.
      */
     public @NotNull FormattingFunction formattedTopStatFunction(@NotNull LinkedHashMap<String, Integer> topStats, @NotNull StatRequest.Settings request) {
-        final TextComponent title = getTopStatTitle(topStats.size(), request.getStatistic(), request.getSubStatEntryName());
-        final TextComponent list = getTopStatListComponent(topStats, request.getStatistic());
+        final TextComponent title = getTopStatTitleComponent(topStats.size(), request.getPage(), request.getStatistic(), request.getSubStatEntryName(), null);
+        final TextComponent list = getTopStatListComponent(topStats, request.getStatistic(), request.getPage(), request.getTopListSize());
         final boolean useEnters = config.useEnters(Target.TOP, false);
         final boolean useEntersForShared = config.useEnters(Target.TOP, true);
 
@@ -488,7 +488,7 @@ public final class MessageBuilder implements StatTextFormatter {
                 .build();
     }
 
-    private @NotNull TextComponent getTopStatTitleComponent(int topListSize, Statistic statistic, @Nullable String subStatName, @Nullable Unit unit) {
+    private @NotNull TextComponent getTopStatTitleComponent(int topListSize, int page, Statistic statistic, @Nullable String subStatName, @Nullable Unit unit) {
         TextComponent statUnit = (unit == null) ?
                 getStatUnitComponent(statistic, Target.TOP) :
                 getStatUnitComponent(unit, Target.TOP);
@@ -499,31 +499,38 @@ public final class MessageBuilder implements StatTextFormatter {
                     .append(statUnit) //space is provided by statUnitComponent
                     .build();
         } else {
-            return Component.text()
+            TextComponent.Builder titleBuilder = Component.text()
                     .append(componentFactory.title(config.getTopStatsTitle(), Target.TOP))
                     .append(space())
-                    .append(componentFactory.titleNumber(topListSize))
-                    .append(space())
+                    .append(componentFactory.titleNumber(topListSize));
+
+            if (page > 1) {
+                titleBuilder.append(space())
+                        .append(componentFactory.title("(Page " + page + ")", Target.TOP));
+            }
+
+            return titleBuilder.append(space())
                     .append(getStatAndSubStatNameComponent(statistic, subStatName, Target.TOP))
                     .append(statUnit)  //space is provided by statUnitComponent
                     .build();
         }
     }
 
-    private @NotNull TextComponent getTopStatListComponent(@NotNull LinkedHashMap<String, Integer> topStats, Statistic statistic) {
+    private @NotNull TextComponent getTopStatListComponent(@NotNull LinkedHashMap<String, Integer> topStats, Statistic statistic, int page, int limit) {
         TextComponent.Builder topList = Component.text();
         Set<String> playerNames = topStats.keySet();
         boolean useDots = config.useDots();
 
-        int count = 0;
+        int count = (page - 1) * limit;
         for (String playerName : playerNames) {
             topList.append(newline());
+            count++;
             if (useDots) {
                 topList.append(getTopStatLineComponent(
-                        ++count, playerName, getStatNumberComponent(topStats.get(playerName), Target.TOP, statistic)));
+                        count, playerName, getStatNumberComponent(topStats.get(playerName), Target.TOP, statistic)));
             } else {
                 topList.append(space())
-                        .append(componentFactory.rankNumber(++count))
+                        .append(componentFactory.rankNumber(count))
                         .append(space())
                         .append(componentFactory.playerName(playerName + ":", Target.TOP))
                         .append(space()).append(getStatNumberComponent(topStats.get(playerName), Target.TOP, statistic));

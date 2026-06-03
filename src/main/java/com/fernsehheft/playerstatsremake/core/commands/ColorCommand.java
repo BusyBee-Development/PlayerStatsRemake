@@ -1,6 +1,7 @@
 package com.fernsehheft.playerstatsremake.core.commands;
 
 import com.fernsehheft.playerstatsremake.core.Main;
+import com.fernsehheft.playerstatsremake.core.msg.OutputManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
@@ -17,6 +18,8 @@ import java.util.List;
 
 public class ColorCommand implements CommandExecutor, TabCompleter {
 
+    private final OutputManager outputManager = OutputManager.getInstance();
+
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player player)) {
@@ -25,12 +28,12 @@ public class ColorCommand implements CommandExecutor, TabCompleter {
         }
 
         if (!player.hasPermission("playerstats.color")) {
-            player.sendMessage(Component.text("You do not have permission to use this command!").color(NamedTextColor.RED));
+            outputManager.sendToCommandSender(player, Component.text("You do not have permission to use this command!").color(NamedTextColor.RED));
             return true;
         }
 
         if (args.length == 0) {
-            player.sendMessage(Component.text("Usage: /statcolor <color|hex|reset>").color(NamedTextColor.RED));
+            outputManager.sendToCommandSender(player, Component.text("Usage: /statcolor <color|hex|reset>").color(NamedTextColor.RED));
             return true;
         }
 
@@ -38,7 +41,7 @@ public class ColorCommand implements CommandExecutor, TabCompleter {
 
         if (colorInput.equalsIgnoreCase("reset") || colorInput.equalsIgnoreCase("clear")) {
             Main.getPlayerColorManager().setColor(player, null);
-            player.sendMessage(Component.text("Your stat color has been reset!").color(NamedTextColor.GREEN));
+            outputManager.sendToCommandSender(player, Component.text("Your stat color has been reset!").color(NamedTextColor.GREEN));
             return true;
         }
 
@@ -50,12 +53,12 @@ public class ColorCommand implements CommandExecutor, TabCompleter {
         }
 
         if (color == null) {
-            player.sendMessage(Component.text("Invalid color! Use a hex code (e.g., #FF0000) or a standard Minecraft color (e.g., red, gold).").color(NamedTextColor.RED));
+            outputManager.sendToCommandSender(player, Component.text("Invalid color! Use a hex code (e.g., #FF0000) or a standard Minecraft color (e.g., red, gold).").color(NamedTextColor.RED));
             return true;
         }
 
         Main.getPlayerColorManager().setColor(player, color);
-        player.sendMessage(Component.text("Your stat color has been set to this!").color(color));
+        outputManager.sendToCommandSender(player, Component.text("Your stat color has been set to this!").color(color));
 
         return true;
     }

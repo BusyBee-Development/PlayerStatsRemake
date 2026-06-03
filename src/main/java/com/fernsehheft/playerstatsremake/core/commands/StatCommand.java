@@ -154,6 +154,7 @@ public final class StatCommand implements CommandExecutor {
         private @Nullable String attemptedPlayerName;
         private @Nullable PlayerNameAnalysis playerLookupFailure;
         private StatRequest<?> request;
+        private int page = 1;
 
         private ArgProcessor(CommandSender sender, String[] args) {
             this.sender = sender;
@@ -175,7 +176,7 @@ public final class StatCommand implements CommandExecutor {
                     switch (target) {
                 case PLAYER -> new PlayerStatRequest(sender, playerName);
                 case SERVER -> new ServerStatRequest(sender);
-                case TOP -> new TopStatRequest(sender, config.getTopListMaxSize());
+                case TOP -> new TopStatRequest(sender, config.getTopListMaxSize(), page);
             };
 
             switch (statistic.getType()) {
@@ -241,7 +242,10 @@ public final class StatCommand implements CommandExecutor {
                             }
                         }
                         case "server" -> target = Target.SERVER;
-                        case "top" -> target = Target.TOP;
+                        case "top" -> {
+                            target = Target.TOP;
+                            extractPage();
+                        }
                     }
                     argsToProcess = removeArg(targetArg);
                     break;
@@ -254,15 +258,34 @@ public final class StatCommand implements CommandExecutor {
                     target = Target.PLAYER;
                     playerName = knownName;
                 } else {
-                    String attempted = extractAttemptedPlayerName(argsToProcess);
-                    if (attempted != null) {
-                        target = Target.PLAYER;
-                        applyPlayerNameAttempt(attempted);
-                    } else {
+                    if (extractPage()) {
                         target = Target.TOP;
+                    } else {
+                        String attempted = extractAttemptedPlayerName(argsToProcess);
+                        if (attempted != null) {
+                            target = Target.PLAYER;
+                            applyPlayerNameAttempt(attempted);
+                        } else {
+                            target = Target.TOP;
+                        }
                     }
                 }
             }
+        }
+
+        private boolean extractPage() {
+            for (String arg : argsToProcess) {
+                if (arg.equalsIgnoreCase("top")) continue;
+                try {
+                    int p = Integer.parseInt(arg);
+                    if (p > 0) {
+                        page = p;
+                        argsToProcess = removeArg(arg);
+                        return true;
+                    }
+                } catch (NumberFormatException ignored) {}
+            }
+            return false;
         }
 
         private void applyPlayerNameAttempt(@NotNull String attempted) {

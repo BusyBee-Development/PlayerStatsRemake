@@ -197,11 +197,11 @@ public final class OutputManager implements Reloadable, Closable {
                 .excludedList(excludedPlayerNames));
     }
 
-    public void sendToAllPlayers(@NotNull TextComponent component) {
+    public void sendToAllPlayers(@NotNull net.kyori.adventure.text.Component component) {
         adventure.players().sendMessage(component);
     }
 
-    public void sendToCommandSender(@NotNull CommandSender sender, @NotNull TextComponent component) {
+    public void sendToCommandSender(@NotNull CommandSender sender, @NotNull net.kyori.adventure.text.Component component) {
         adventure.sender(sender).sendMessage(component);
     }
 

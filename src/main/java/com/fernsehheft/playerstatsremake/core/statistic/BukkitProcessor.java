@@ -119,6 +119,7 @@ final class BukkitProcessor extends RequestProcessor {
     private LinkedHashMap<String, Integer> getTopStats(StatRequest.Settings requestSettings) {
         return getAllStatsAsync(requestSettings).entrySet().stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .skip((long) (requestSettings.getPage() - 1) * requestSettings.getTopListSize())
                 .limit(requestSettings.getTopListSize())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
     }

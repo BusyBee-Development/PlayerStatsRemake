@@ -18,9 +18,9 @@ Here is the complete list of all issues we inherited from the original plugin.
 - [x] **#53** - Improve feedback for wrong playerNames
 - [x] **#51** - Look into notification-for-update feature
 - [x] **00** - Added support for FastStats metrics
+- [x] **#154** - Add pagination / more than top 10 
 
 ## 🟡 Open (Bugfixes & Quality of Life)
-- [ ] **#154** - Add pagination / more than top 10
 - [ ] **#134** - Make a language file for plugin messages
 - [ ] **#133** - Add hovertext to explain the secret birthday theme
 - [ ] **#132** - Make config setting to set specific themes

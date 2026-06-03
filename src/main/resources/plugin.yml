@@ -45,16 +45,17 @@ commands:
     description: set a custom color for your name in stats
     usage: "§6/statcolor <color|hex|reset>"
     permission: playerstatsremake.color
+
 permissions:
   playerstatsremake.color:
     description: allows setting a custom stat color
     default: true
   playerstatsremake.stat:
     description: allows usage of /statistic
-    default: false
+    default: op
   playerstatsremake.share:
     description: allows sharing stats in chat
-    default: false
+    default: op
   playerstatsremake.exclude:
     description: allows usage of /statexclude
     default: op

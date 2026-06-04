@@ -21,7 +21,7 @@ public final class MyLogger {
     private static ConcurrentHashMap<String, Integer> threadNames;
 
     static {
-        Plugin plugin = Bukkit.getPluginManager().getPlugin("PlayerStats");
+        Plugin plugin = Bukkit.getPluginManager().getPlugin("PlayerStatsRemake");
         logger = (plugin != null) ? plugin.getLogger() : Bukkit.getLogger();
         debugLevel = DebugLevel.LOW;
         threadNames = new ConcurrentHashMap<>();

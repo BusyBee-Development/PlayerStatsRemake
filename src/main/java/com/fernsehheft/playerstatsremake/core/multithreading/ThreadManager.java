@@ -13,6 +13,7 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -66,8 +67,8 @@ public final class ThreadManager {
         return task;
     }
 
-    public static @NotNull PlayerLoadAction getPlayerLoadAction(OfflinePlayer[] playersToLoad, ConcurrentHashMap<String, UUID> mapToFill) {
-        PlayerLoadAction task = new PlayerLoadAction(playersToLoad, mapToFill);
+    public static @NotNull PlayerLoadAction getPlayerLoadAction(OfflinePlayer[] playersToLoad, ConcurrentHashMap<String, UUID> mapToFill, Set<UUID> bannedUUIDs, Set<UUID> whitelistedUUIDs) {
+        PlayerLoadAction task = new PlayerLoadAction(playersToLoad, mapToFill, bannedUUIDs, whitelistedUUIDs);
         MyLogger.actionCreated(playersToLoad != null ? playersToLoad.length : 0);
         return task;
     }

@@ -5,6 +5,7 @@ import com.fernsehheft.playerstatsremake.core.utils.MyLogger;
 import com.fernsehheft.playerstatsremake.core.utils.OfflinePlayerHandler;
 import org.bukkit.OfflinePlayer;
 
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.RecursiveAction;
@@ -21,6 +22,8 @@ final class PlayerLoadAction extends RecursiveAction {
     private final int end;
 
     private final ConcurrentHashMap<String, UUID> offlinePlayerUUIDs;
+    private final Set<UUID> bannedUUIDs;
+    private final Set<UUID> whitelistedUUIDs;
 
     /**
      * Fills a ConcurrentHashMap with PlayerNames and UUIDs for all OfflinePlayers
@@ -31,16 +34,22 @@ final class PlayerLoadAction extends RecursiveAction {
      * @see OfflinePlayerHandler
      */
     public PlayerLoadAction(OfflinePlayer[] players, ConcurrentHashMap<String, UUID> offlinePlayerUUIDs) {
-       this(players, 0, players.length, offlinePlayerUUIDs);
+       this(players, 0, players.length, offlinePlayerUUIDs, null, null);
     }
 
-    private PlayerLoadAction(OfflinePlayer[] players, int start, int end, ConcurrentHashMap<String, UUID> offlinePlayerUUIDs) {
+    public PlayerLoadAction(OfflinePlayer[] players, ConcurrentHashMap<String, UUID> offlinePlayerUUIDs, Set<UUID> bannedUUIDs, Set<UUID> whitelistedUUIDs) {
+       this(players, 0, players.length, offlinePlayerUUIDs, bannedUUIDs, whitelistedUUIDs);
+    }
+
+    private PlayerLoadAction(OfflinePlayer[] players, int start, int end, ConcurrentHashMap<String, UUID> offlinePlayerUUIDs, Set<UUID> bannedUUIDs, Set<UUID> whitelistedUUIDs) {
         threshold = ThreadManager.getTaskThreshold();
 
         this.players = players;
         this.start = start;
         this.end = end;
         this.offlinePlayerUUIDs = offlinePlayerUUIDs;
+        this.bannedUUIDs = bannedUUIDs;
+        this.whitelistedUUIDs = whitelistedUUIDs;
 
         MyLogger.subActionCreated(Thread.currentThread().getName());
     }
@@ -54,9 +63,9 @@ final class PlayerLoadAction extends RecursiveAction {
         else {
             final int split = length / 2;
             final PlayerLoadAction subTask1 = new PlayerLoadAction(players, start, (start + split),
-                    offlinePlayerUUIDs);
+                    offlinePlayerUUIDs, bannedUUIDs, whitelistedUUIDs);
             final PlayerLoadAction subTask2 = new PlayerLoadAction(players, (start + split), end,
-                    offlinePlayerUUIDs);
+                    offlinePlayerUUIDs, bannedUUIDs, whitelistedUUIDs);
 
             //queue and compute all subtasks in the right order
             invokeAll(subTask1, subTask2);
@@ -72,7 +81,7 @@ final class PlayerLoadAction extends RecursiveAction {
             MyLogger.actionRunning(Thread.currentThread().getName());
             if (playerName != null &&
                     !offlinePlayerHandler.isExcludedPlayer(player.getUniqueId()) &&
-                    !InclusionFilter.isExcludedFromStatistics(player)) {
+                    !InclusionFilter.isExcludedFromStatistics(player, bannedUUIDs, whitelistedUUIDs)) {
                 offlinePlayerUUIDs.put(playerName, player.getUniqueId());
             }
         }

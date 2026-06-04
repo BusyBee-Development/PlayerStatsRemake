@@ -202,8 +202,12 @@ public final class OfflinePlayerHandler extends YamlFileHandler {
     private void loadOfflinePlayers() {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
-            loadExcludedPlayerNames();
-            loadIncludedOfflinePlayers();
+            try {
+                loadExcludedPlayerNames();
+                loadIncludedOfflinePlayers();
+            } catch (Exception e) {
+                MyLogger.logException(e, "OfflinePlayerHandler", "Error loading offline players");
+            }
         });
         executor.shutdown();
     }
@@ -223,7 +227,22 @@ public final class OfflinePlayerHandler extends YamlFileHandler {
         int size = includedPlayerUUIDs != null ? includedPlayerUUIDs.size() : 16;
         includedPlayerUUIDs = new ConcurrentHashMap<>(size);
 
-        ForkJoinPool.commonPool().invoke(ThreadManager.getPlayerLoadAction(offlinePlayers, includedPlayerUUIDs));
+        Set<UUID> bannedUUIDs = null;
+        if (config.excludeBanned() && !Bukkit.getPluginManager().isPluginEnabled("LiteBans")) {
+            bannedUUIDs = new HashSet<>();
+            for (OfflinePlayer p : Bukkit.getBannedPlayers()) {
+                bannedUUIDs.add(p.getUniqueId());
+            }
+        }
+        Set<UUID> whitelistedUUIDs = null;
+        if (config.whitelistOnly()) {
+            whitelistedUUIDs = new HashSet<>();
+            for (OfflinePlayer p : Bukkit.getWhitelistedPlayers()) {
+                whitelistedUUIDs.add(p.getUniqueId());
+            }
+        }
+
+        ForkJoinPool.commonPool().invoke(ThreadManager.getPlayerLoadAction(offlinePlayers, includedPlayerUUIDs, bannedUUIDs, whitelistedUUIDs));
 
         MyLogger.actionFinished();
         MyLogger.logLowLevelTask(("Loaded " + includedPlayerUUIDs.size() + " offline players"), startTime);

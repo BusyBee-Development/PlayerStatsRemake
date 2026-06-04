@@ -69,6 +69,11 @@ final class StatThread extends Thread {
             if (!statRequest.getSettings().isConsoleSender()) {
                 outputManager.sendFeedbackMsg(statRequester, StandardMessage.UNKNOWN_ERROR);
             }
+        } catch (Exception e) {
+            MyLogger.logException(e, "StatThread", "Error during stat calculation or event firing");
+            if (!statRequest.getSettings().isConsoleSender()) {
+                outputManager.sendFeedbackMsg(statRequester, StandardMessage.UNKNOWN_ERROR);
+            }
         }
     }
 }

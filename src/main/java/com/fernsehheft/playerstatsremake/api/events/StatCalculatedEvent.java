@@ -39,6 +39,7 @@ public class StatCalculatedEvent extends Event {
             @NotNull CommandSender requester,
             @NotNull StatRequest<?> statRequest,
             @NotNull StatResult<?> statResult) {
+        super(true);
         this.requester = requester;
         this.statRequest = statRequest;
         this.statResult = statResult;

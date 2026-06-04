@@ -6,7 +6,7 @@
 
     <groupId>com.fernsehheft</groupId>
     <artifactId>PlayerStatsRemake</artifactId>
-    <version>2026.6.1</version>
+    <version>2026.6.2</version>
 
     <name>PlayerStatsRemake</name>
     <description>A modern, actively maintained fork of PlayerStats with Folia support, bug fixes, and new features</description>

@@ -4,8 +4,10 @@ import com.fernsehheft.playerstatsremake.core.config.ConfigHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * Shared rules for which offline players are included in statistic calculations.
@@ -19,17 +21,36 @@ public final class InclusionFilter {
      * @return true if this player should not be included in top/server stat calculations
      */
     public static boolean isExcludedFromStatistics(@NotNull OfflinePlayer player) {
+        return isExcludedFromStatistics(player, null, null);
+    }
+
+    /**
+     * @return true if this player should not be included in top/server stat calculations
+     */
+    public static boolean isExcludedFromStatistics(@NotNull OfflinePlayer player, @Nullable Set<UUID> bannedUUIDs, @Nullable Set<UUID> whitelistedUUIDs) {
         ConfigHandler config = ConfigHandler.getInstance();
         String playerName = player.getName();
         if (playerName == null) {
             return true;
         }
 
-        if (config.whitelistOnly() && !isWhitelisted(player)) {
-            return true;
+        if (config.whitelistOnly()) {
+            if (whitelistedUUIDs != null) {
+                if (!whitelistedUUIDs.contains(player.getUniqueId())) {
+                    return true;
+                }
+            } else if (!isWhitelisted(player)) {
+                return true;
+            }
         }
-        if (config.excludeBanned() && isBanned(player)) {
-            return true;
+        if (config.excludeBanned()) {
+            if (bannedUUIDs != null) {
+                if (bannedUUIDs.contains(player.getUniqueId())) {
+                    return true;
+                }
+            } else if (isBanned(player)) {
+                return true;
+            }
         }
         return !UnixTimeHandler.hasPlayedSince(config.getLastPlayedLimit(), player.getLastPlayed());
     }
